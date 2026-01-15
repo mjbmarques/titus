@@ -1,13 +1,15 @@
 use std::io;
 use ratatui::backend::Backend;
-use ratatui::crossterm::event::EnableMouseCapture;
-use ratatui::crossterm::terminal::{self, EnterAlternateScreen};
+use ratatui::crossterm::event::{DisableMouseCapture, EnableMouseCapture};
+use ratatui::crossterm::terminal::{self, EnterAlternateScreen, LeaveAlternateScreen};
 use ratatui::Terminal;
 use crate::tui::event::EventHandler;
 use crate::tui::state::State;
 
 pub mod state;
 pub mod event;
+mod ui;
+pub mod file_io;
 
 pub struct Tui<B: Backend> {
     terminal: Terminal<B>,
@@ -28,6 +30,18 @@ impl<B: Backend> Tui<B> {
     }
 
     pub fn draw(&mut self, state: &State) {
+        match self.terminal.draw(|frame| ui::render(state, frame)) {
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("Error drawing terminal: {}", e);
+            }
+        }
+    }
 
+    pub fn exit(&mut self) {
+        terminal::disable_raw_mode().expect("failed to disable raw mode");
+        ratatui::crossterm::execute!(io::stdout(), LeaveAlternateScreen, DisableMouseCapture).expect("failed to leave alternate screen");
+        self.terminal.show_cursor().expect("failed to show cursor");
+        self.events.stop();
     }
 }

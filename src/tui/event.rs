@@ -2,8 +2,10 @@ use std::sync::{mpsc, Arc};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{Sender, Receiver};
 use ratatui::crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
-use std::thread;
+use std::{sync, thread};
+use std::error::Error;
 use std::time::{Duration, Instant};
+use log::{debug, info};
 
 #[derive(Debug)]
 pub enum Event {
@@ -43,8 +45,12 @@ impl EventHandler {
     }
 
     pub fn next(&self) -> Result<Event, String> {
+        info!("event next called");
         match self.receiver.recv() {
-            Ok(event) => Ok(event),
+            Ok(event) => {
+                // debug!("event received: {:?}", event);
+                Ok(event)
+            },
             Err(_) => Err(String::from("Failed to receive event")),
         }
     }
@@ -60,6 +66,7 @@ fn setup_thread(sender: Sender<Event>, tick_rate: u64, is_active: Arc<AtomicBool
         while is_active.load(Ordering::Relaxed) {
             let timeout = calculate_timeout(&tick_duration, &last_tick);
             handle_tui_events(&sender, timeout);
+
             if last_tick.elapsed().ge(&tick_duration) {
                 last_tick = Instant::now();
             }
@@ -70,13 +77,14 @@ fn setup_thread(sender: Sender<Event>, tick_rate: u64, is_active: Arc<AtomicBool
 fn handle_tui_events(sender: &Sender<Event>, timeout: Duration) {
     if event::poll(timeout).expect("event polling failed") {
         match event::read().expect("event reading failed") {
-            CrosstermEvent::FocusGained => { sender.send(Event::FocusGained).unwrap() },
-            CrosstermEvent::FocusLost => { sender.send(Event::FocusLost).unwrap() },
-            CrosstermEvent::Key(key) => { sender.send(Event::Key(key)).unwrap() },
-            CrosstermEvent::Mouse(mouse) => { sender.send(Event::Mouse(mouse)).unwrap() },
-            CrosstermEvent::Resize(w, h) => { sender.send(Event::Resize(w, h)).unwrap(); },
-            CrosstermEvent::Paste(value) => { sender.send(Event::Paste(value)).unwrap() },
-        }
+            CrosstermEvent::FocusGained => { sender.send(Event::FocusGained) },
+            CrosstermEvent::FocusLost => { sender.send(Event::FocusLost) },
+            CrosstermEvent::Key(key) => { sender.send(Event::Key(key)) },
+            CrosstermEvent::Mouse(mouse) => { sender.send(Event::Mouse(mouse)) },
+            CrosstermEvent::Resize(w, h) => { sender.send(Event::Resize(w, h)) },
+            CrosstermEvent::Paste(value) => { sender.send(Event::Paste(value)) },
+        }.expect("failed to send event through channel");
+
     }
 }
 

@@ -5,7 +5,7 @@ appenders:
       pattern: "{d(%+)(utc)} [{f}:{L}] {h({l})} {M}:{m}{n}"
     filters:
       - kind: threshold
-        level: info
+        level: debug
   file:
     kind: file
     path: "log/titus-$TIME{%Y-%m-%d_%H-%M-%S}.log"
@@ -26,8 +26,8 @@ appenders:
         base: 0
         count: 2
 root:
-  level: info
+  level: debug
   appenders:
-    - stdout
+#    - stdout
     - file
     - rollingfile
