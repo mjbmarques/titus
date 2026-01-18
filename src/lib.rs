@@ -36,7 +36,7 @@ pub fn start_tui() {
 }
 
 fn tui_loop(my_tui: &mut Tui<CrosstermBackend<Stdout>>, state: &mut State) -> Result<(), String> {
-    my_tui.draw(&state);
+    my_tui.draw(state);
 
     match my_tui.events.next()? {
         Event::Key(event) => {

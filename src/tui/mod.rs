@@ -10,6 +10,7 @@ pub mod state;
 pub mod event;
 mod ui;
 pub mod file_io;
+mod widgets;
 
 pub struct Tui<B: Backend> {
     terminal: Terminal<B>,
@@ -29,7 +30,7 @@ impl<B: Backend> Tui<B> {
         Ok(())
     }
 
-    pub fn draw(&mut self, state: &State) {
+    pub fn draw(&mut self, state: &mut State) {
         match self.terminal.draw(|frame| ui::render(state, frame)) {
             Ok(_) => {}
             Err(e) => {
