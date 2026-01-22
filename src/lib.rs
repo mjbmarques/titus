@@ -8,7 +8,6 @@ use tui::{state::State};
 use std::{io};
 use std::io::Stdout;
 use log::debug;
-use ratatui::crossterm::event::KeyEvent;
 use crate::tui::event::EventHandler;
 use crate::tui::event::Event;
 use crate::tui::{Tui};
@@ -24,6 +23,7 @@ pub fn start_tui() {
     let events = EventHandler::new(250);
 
     let mut state: State = State::new();
+    state.load_log_lines("./log/titus-2025-12-30_15-10-47.log");
     let terminal = terminal.unwrap();
     let mut my_tui = Tui::new(terminal, events);
     my_tui.init();
@@ -42,6 +42,7 @@ fn tui_loop(my_tui: &mut Tui<CrosstermBackend<Stdout>>, state: &mut State) -> Re
         Event::Key(event) => {
             debug!("Key event: {:?}", event);
             keybinds::quit::try_key(state, event);
+            keybinds::scroll::try_key(state, event);
         },
         Event::FocusGained => {
             debug!("Got focus gained event");

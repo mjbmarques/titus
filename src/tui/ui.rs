@@ -1,25 +1,21 @@
-use std::ptr::addr_of_mut;
 use std::str::FromStr;
 use log::info;
 use ratatui::Frame;
 use ratatui::layout::{Alignment, Constraint, Margin, Rect};
 use ratatui::prelude::{Direction, Layout};
-use ratatui::style::{Color, Style, Styled, Stylize};
+use ratatui::style::{Color, Modifier, Style, Styled, Stylize};
 use ratatui::{widgets};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Cell, Paragraph, Row, Table, TableState};
 use crate::State;
-use crate::tui::file_io;
-use crate::tui::widgets::list::SelectableList;
 
 /// Key bindings.
 const KEY_BINDINGS: &[(&str, &str)] = &[
     ("Search", "^f"),
     ("Up/Down", "↑/↓"),
+    ("Page", "^↑/^↓"),
     ("Quit", "q"),
 ];
-
-const LIST_BLOCK_SIZE: usize = 100;
 
 pub fn render(state: &mut State, frame: &mut Frame) {
     info!("render state: {:?}", state);
@@ -87,22 +83,30 @@ fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
     frame.render_widget(block, own_chunk);
 
     // render inside the outside block, in this case, the content itself.
-    state.item_list = SelectableList::with_items(get_test_strings(state));
     render_viewer_content(state, frame, own_chunk.inner(Margin::new(2, 2)));
 }
 
-fn render_viewer_content(state: &State, frame: &mut Frame, chunk: Rect) {
-    let selected_index = state.item_list.state.selected().unwrap_or_default();
-    let page = selected_index / LIST_BLOCK_SIZE;
-    let items = state
-        .item_list
-        .items
-        .iter()
-        .skip(page * LIST_BLOCK_SIZE)
-        .take(LIST_BLOCK_SIZE);
+fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
+    let viewport = usize::from(chunk.height).max(1);
+    state.page_size = viewport;
+
+    let selected_index = state.item_list.state.selected().unwrap_or(0);
+    if selected_index < state.scroll_offset {
+        state.scroll_offset = selected_index;
+    }
+    let bottom = state.scroll_offset.saturating_add(viewport - 1);
+    if selected_index > bottom {
+        state.scroll_offset = selected_index.saturating_sub(viewport - 1);
+    }
+
+    let start = state.scroll_offset;
+    let end = (start + viewport).min(state.item_list.items.len());
+    let items = state.item_list.items[start..end].iter();
 
     let mut list_state = TableState::default();
-    list_state.select(Some(selected_index % LIST_BLOCK_SIZE));
+    if !state.item_list.items.is_empty() {
+        list_state.select(Some(selected_index.saturating_sub(start)));
+    }
     frame.render_stateful_widget(
         Table::new(
             items.map(|item| {
@@ -112,26 +116,15 @@ fn render_viewer_content(state: &State, frame: &mut Frame, chunk: Rect) {
                 })])
             }),
             &[Constraint::Percentage(100)],
-        ),
+        )
+        .highlight_style(Style::default()
+            .fg(Color::White)
+            .bg(Color::Rgb(60, 60, 60))
+            .add_modifier(Modifier::BOLD))
+        .highlight_symbol("> "),
         chunk,
         &mut list_state
     );
-}
-
-// For testing purposes only; to be replaced with real file opening logic, and in the right place
-// which is not here at all.
-fn get_test_strings(state: &mut State) -> Vec<String> {
-    let mut lines_vec: Vec<String> = Vec::new();
-    let file_location =  "./log/titus-2025-12-30_15-10-47.log";
-    if let Ok(lines ) = file_io::read_lines(file_location) {
-        for line in lines.map_while(Result::ok) {
-            lines_vec.push(line);
-        }
-    };
-    if lines_vec.len() > 0 {
-        state.curr_open_file = Some(file_location.to_string());
-    }
-    lines_vec
 }
 
 fn generate_footer_text() -> Line<'static> {

@@ -17,7 +17,11 @@ impl<T> SelectableList<T> {
 
     // Instantiate with items and a given table state.
     pub fn new(items: Vec<T>, mut state: TableState) -> Self {
-        state.select(Some(0));
+        if items.is_empty() {
+            state.select(None);
+        } else {
+            state.select(Some(0));
+        }
         Self { items, state }
     }
 
@@ -42,30 +46,21 @@ impl<T> SelectableList<T> {
     }
 
     pub fn select_next(&mut self, amount: usize) {
-        let next_index = match self.state.selected() {
-            Some(i) => {
-                if i.saturating_add(amount) >= self.items.len() {
-                    0
-                } else {
-                    i.saturating_add(amount)
-                }
-            },
-            None => 0,
-        };
-        self.state.select(Some(next_index))
+        if self.items.is_empty() {
+            self.state.select(None);
+            return;
+        }
+        let last = self.items.len() - 1;
+        let next_index = self.state.selected().unwrap_or(0).saturating_add(amount).min(last);
+        self.state.select(Some(next_index));
     }
 
     pub fn select_prev(&mut self, amount: usize) {
-        let next_index = match self.state.selected() {
-            Some(i) => {
-                if i.saturating_sub(amount) >= self.items.len() {
-                    0
-                } else {
-                    i.saturating_sub(amount)
-                }
-            },
-            None => 0,
-        };
-        self.state.select(Some(next_index))
+        if self.items.is_empty() {
+            self.state.select(None);
+            return;
+        }
+        let next_index = self.state.selected().unwrap_or(0).saturating_sub(amount);
+        self.state.select(Some(next_index));
     }
 }
