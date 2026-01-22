@@ -72,6 +72,7 @@ fn render_main_header(state: &State, frame: &mut Frame, own_chunk: Rect) {
 
 }
 fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
+    // render outside block first
     let block = Block::new()
         .bold()
         .fg(Color::White)
@@ -85,11 +86,7 @@ fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
         .title_bottom(generate_footer_text());
     frame.render_widget(block, own_chunk);
 
-    // let paragraph = Paragraph::new(get_test_lines())
-    //     .block(block)
-    //     .scroll((state.scroll_bar_position.get_position() as u16, 0));
-    //
-    // frame.render_widget(paragraph, own_chunk);
+    // render inside the outside block, in this case, the content itself.
     state.item_list = SelectableList::with_items(get_test_strings(state));
     render_viewer_content(state, frame, own_chunk.inner(Margin::new(2, 2)));
 }
