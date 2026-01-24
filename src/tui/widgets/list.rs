@@ -1,7 +1,7 @@
 use log::{info, warn};
 use ratatui::widgets::{ListState};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SelectableList<T> {
     pub items: Vec<T>,
     pub state: ListState,
@@ -33,6 +33,29 @@ impl<T> SelectableList<T> {
     pub fn get_selected_item(&self) -> Option<&T> {
         let selected_index = self.state.selected()?;
         self.items.get(selected_index)
+    }
+
+    pub fn force_select_item(&mut self, index: usize) {
+        if self.items.len() <= index {
+            warn!("Trying to select item at index {} but list only has {} items.", index, self.items.len());
+        } else {
+            info!("Forcing selection to index {}", index);
+            self.state.select(Some(index))
+        }
+    }
+
+    pub fn force_select_with_offset(&mut self, index: usize, offset: usize) {
+        self.force_select_item(index);
+        self.set_offset(offset);
+    }
+
+    pub fn set_offset(&mut self, offset: usize) {
+        if self.items.len() <= offset {
+            warn!("Trying to set offset to {} but list only has {} items.", offset, self.items.len());
+            return;
+        }
+        info!("Setting offset to {}", offset);
+        *self.state.offset_mut() = offset;
     }
 
     pub fn force_select_first(&mut self) {
@@ -82,5 +105,41 @@ impl<T> SelectableList<T> {
         };
         info!("select_prev to index {}", next_index);
         self.state.select(Some(next_index))
+    }
+
+    pub fn increment_offset(&mut self, amount: usize) {
+        if self.items.is_empty() {
+            warn!("Selecting previous item in the EMPTY list.");
+            return;
+        }
+
+        let current_offset = self.state.offset();
+        let next_offset =
+                if current_offset.saturating_add(amount) >= self.items.len() {
+                    // set to max offset
+                    self.items.len() - 1
+                } else {
+                    current_offset.saturating_add(amount)
+                };
+        info!("increment_offset to {}", next_offset);
+        _ = self.state.with_offset(next_offset);
+    }
+
+    pub fn decrement_offset(&mut self, amount: usize) {
+        if self.items.is_empty() {
+            warn!("Selecting previous item in the EMPTY list.");
+            return;
+        }
+
+        let current_offset = self.state.offset();
+        let next_offset =
+                if current_offset.saturating_sub(amount) <= 0 {
+                    // set to 0
+                    0
+                } else {
+                    current_offset.saturating_sub(amount)
+                };
+        info!("decrement_offset to {}", next_offset);
+        _ = self.state.with_offset(next_offset);
     }
 }

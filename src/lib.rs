@@ -12,6 +12,7 @@ use ratatui::crossterm::event::KeyEvent;
 use crate::tui::event::EventHandler;
 use crate::tui::event::Event;
 use crate::tui::{file_io, Tui};
+use crate::tui::state::{FileBatch, LogFileState};
 use crate::tui::widgets::list::SelectableList;
 
 pub fn start_tui() {
@@ -30,7 +31,19 @@ pub fn start_tui() {
     my_tui.init();
 
     // render inside the outside block, in this case, the content itself.
-    state.item_list = SelectableList::with_items(get_test_strings(&mut state));
+    let file_location = String::from("./log/titus-2025-12-30_15-10-47.log");
+    let hardcoded_content = get_test_strings(file_location);
+    // TODO: Ultra hardcoded for testing purposes only.
+    state.curr_open_file = Some(LogFileState{
+        id: 1,
+        file_name: String::from("./log/titus-2025-12-30_15-10-47.log"),
+        file_path: String::from("./log/titus-2025-12-30_15-10-47.log"),
+        file_lines: hardcoded_content.len(),
+        file_loaded_lines: FileBatch{ upper: hardcoded_content.len().saturating_sub(1) , lower: 0 } ,
+        loaded_lines: SelectableList::with_items(hardcoded_content),
+    });
+    // TODO: Be careful with this line, must be changed in the future.
+    state.current_list = state.curr_open_file.clone().unwrap().loaded_lines;
 
     while state.should_quit.eq(&false) {
         tui_loop(&mut my_tui, &mut state).expect("TODO: panic message");
@@ -40,17 +53,13 @@ pub fn start_tui() {
 
 // For testing purposes only; to be replaced with real file opening logic, and in the right place
 // which is not here at all.
-fn get_test_strings(state: &mut State) -> Vec<String> {
+fn get_test_strings(file_location: String) -> Vec<String> {
     let mut lines_vec: Vec<String> = Vec::new();
-    let file_location =  "./log/titus-2025-12-30_15-10-47.log";
     if let Ok(lines ) = file_io::read_lines(file_location) {
         for line in lines.map_while(Result::ok) {
             lines_vec.push(line);
         }
     };
-    if lines_vec.len() > 0 {
-        state.curr_open_file = Some(file_location.to_string());
-    }
     lines_vec
 }
 

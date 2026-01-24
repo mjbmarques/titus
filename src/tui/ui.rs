@@ -1,22 +1,18 @@
-use std::ptr::addr_of_mut;
-use std::str::FromStr;
-use log::{debug, info};
+use log::{info};
 use ratatui::Frame;
 use ratatui::layout::{Alignment, Constraint, Margin, Rect};
 use ratatui::prelude::{Direction, Layout};
 use ratatui::style::{Color, Modifier, Style, Styled, Stylize};
 use ratatui::{widgets};
 use ratatui::text::{Line, Span};
-use ratatui::widgets::{Block, Cell, List, ListItem, ListState, Paragraph, Row, Table, TableState};
+use ratatui::widgets::{Block, List, ListItem, Paragraph};
 use crate::State;
-use crate::tui::file_io;
-use crate::tui::widgets::list::SelectableList;
 use crate::tui::colors;
 
 /// Key bindings.
 const KEY_BINDINGS: &[(&str, &str)] = &[
     ("Search", "^f"),
-    ("Up/Down", "↑/↓"),
+    ("Nav", "↑/↓"),
     ("Page", "^↑/^↓"),
     ("Quit", "q"),
 ];
@@ -58,11 +54,12 @@ fn render_main_header(state: &State, frame: &mut Frame, own_chunk: Rect) {
         .margin(1)
         .split(own_chunk);
 
-    let file_name = state.curr_open_file.as_deref().unwrap_or("empty");
-    frame.render_widget(
-        Paragraph::new(file_name),
-        layout[0]
-    );
+    if state.curr_open_file.is_some() {
+        frame.render_widget(
+            Paragraph::new(state.curr_open_file.as_ref().unwrap().file_name.as_str()),
+            layout[0]
+        );
+    }
 
 
 }
@@ -80,12 +77,12 @@ fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
         .title_alignment(Alignment::Center)
         .title_bottom(generate_footer_text());
     frame.render_widget(block, own_chunk);
-    
+
     render_viewer_content(state, frame, own_chunk.inner(Margin::new(2, 2)));
 }
 
 fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
-    log::info!("render viewer content");
+    info!("render viewer content");
     // let selected_index = state.item_list.state.selected().unwrap_or_default();
     // let page = selected_index / LIST_BLOCK_SIZE;
     // let items = state
@@ -102,8 +99,9 @@ fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
     //         Line::from(item.as_str().fg(colors::WHITE))
     //     })])
     // });
+    update_recommended_list_offset(state, frame.area().height);
     frame.render_stateful_widget(
-        List::new(state.item_list.items.iter().map(|item| ListItem::new(item.as_str())))
+        List::new(state.current_list.items.iter().map(|item| ListItem::new(item.as_str())))
             // .style(colors::DIM_YELLOW)
             // .fg(colors::LIGHT_BLUE)
             // .bg(colors::STRONG_YELLOW)
@@ -115,7 +113,18 @@ fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
                 .bg(colors::DIM_YELLOW))
             .highlight_symbol("> "),
         chunk,
-        &mut state.item_list.state
+        &mut state.current_list.state
+    );
+}
+
+fn update_recommended_list_offset(state: &mut State, height: u16) {
+    if height > 6 {
+        state.recommended_list_offset = usize::from(
+            height.saturating_sub(2).saturating_div(4)
+        );
+    }
+    state.recommended_list_offset = usize::from(
+        height.saturating_sub(2).saturating_div(2)
     );
 }
 
