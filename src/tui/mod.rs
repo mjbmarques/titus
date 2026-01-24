@@ -10,7 +10,8 @@ pub mod state;
 pub mod event;
 mod ui;
 pub mod file_io;
-mod widgets;
+pub mod widgets;
+pub mod colors;
 
 pub struct Tui<B: Backend> {
     terminal: Terminal<B>,
