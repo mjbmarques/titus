@@ -1,4 +1,4 @@
-use log::{info};
+use log::{debug, error, info};
 use ratatui::Frame;
 use ratatui::layout::{Alignment, Constraint, Margin, Rect};
 use ratatui::prelude::{Direction, Layout};
@@ -8,6 +8,7 @@ use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, List, ListItem, Paragraph};
 use crate::State;
 use crate::tui::colors;
+use crate::tui::state::Dimensions;
 
 /// Key bindings.
 const KEY_BINDINGS: &[(&str, &str)] = &[
@@ -83,29 +84,10 @@ fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
 
 fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
     info!("render viewer content");
-    // let selected_index = state.item_list.state.selected().unwrap_or_default();
-    // let page = selected_index / LIST_BLOCK_SIZE;
-    // let items = state
-    //     .item_list
-    //     .items
-    //     .iter()
-    //     .skip(page * LIST_BLOCK_SIZE)
-    //     .take(LIST_BLOCK_SIZE);
-
-    // list_state.select(Some(selected_index % LIST_BLOCK_SIZE)); // should I really do this?
-    // let list_items = items.map(|item| {
-    //     Row::new(vec![Cell::from({
-    //         // can become a vector instead of str if needed (for styling for example)
-    //         Line::from(item.as_str().fg(colors::WHITE))
-    //     })])
-    // });
-    update_recommended_list_offset(state, frame.area().height);
+    update_mode_dimensions(state, chunk);
+    error!("[TEST] - chunk height: {}, width: {}", chunk.height, chunk.width);
     frame.render_stateful_widget(
         List::new(state.current_list.items.iter().map(|item| ListItem::new(item.as_str())))
-            // .style(colors::DIM_YELLOW)
-            // .fg(colors::LIGHT_BLUE)
-            // .bg(colors::STRONG_YELLOW)
-            // .add_modifier(Modifier::DIM)
             .add_modifier(Modifier::BOLD)
             .highlight_style(Style::default()
                 .add_modifier(Modifier::BOLD)
@@ -117,15 +99,13 @@ fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
     );
 }
 
-fn update_recommended_list_offset(state: &mut State, height: u16) {
-    if height > 6 {
-        state.recommended_list_offset = usize::from(
-            height.saturating_sub(2).saturating_div(4)
-        );
-    }
-    state.recommended_list_offset = usize::from(
-        height.saturating_sub(2).saturating_div(2)
-    );
+fn update_mode_dimensions(state: &mut State, chunk: Rect) {
+    state.current_mode.dimensions = Dimensions {
+        width: chunk.width,
+        height: chunk.height,
+    };
+    debug!("Updated mode {:?} with dimensions: {:?}",
+        state.current_mode.mode, state.current_mode.dimensions);
 }
 
 fn generate_footer_text() -> Line<'static> {

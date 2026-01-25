@@ -1,8 +1,12 @@
 use log::debug;
-use ratatui::crossterm::event::{KeyCode, KeyEvent};
+use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use crate::tui::state::State;
 
 pub fn try_keypress(state: &mut State, event: KeyEvent) {
+    if KeyModifiers::CONTROL == event.modifiers {
+        try_ctrl_mod_keypress(state, event);
+        return;
+    }
     match event.code {
         KeyCode::Up => select_prev(state),
         KeyCode::Down => select_next(state),
@@ -32,6 +36,17 @@ pub fn try_keypress(state: &mut State, event: KeyEvent) {
         _ => log::warn!("Unhandled PRESS key: {:?}", event),
     }
 }
+
+fn try_ctrl_mod_keypress(state: &mut State, event: KeyEvent) {
+    match event.code {
+        // KeyCode::Up => state.current_list.decrement_offset(1),
+        // KeyCode::Down => state.current_list.increment_offset(1),
+        KeyCode::Up => state.current_list.state.scroll_up_by(1),
+        KeyCode::Down => state.current_list.state.scroll_down_by(1),
+        _ => log::warn!("Unhandled PRESS CTRL+key: {:?}", event),
+    }
+}
+
 pub fn try_key_release(_: &mut State, event: KeyEvent) {
     log::warn!("Unhandled RELEASE key: {:?}", event);
 }

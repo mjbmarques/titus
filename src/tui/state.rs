@@ -3,17 +3,34 @@ use crate::tui::widgets::list::SelectableList;
 
 #[derive(Debug)]
 pub struct State {
+    pub current_mode: ModeState,
+    pub all_modes: Vec<ModeState>, // TODO: implement mode switching and management.
     pub scroll_bar_position: ScrollbarState,
     pub ready: bool,
     pub should_quit: bool,
-    // aside form curr_open_file, another field can be created as a list later on to represent
-    // multiple open files.
+    // TODO: consider just using index to all_open_files.
+    //  might or not be a good idea.
     pub curr_open_file: Option<LogFileState>,
+    pub all_open_files: Vec<LogFileState>, // TODO: implement management of multiple open files.
     pub current_list: SelectableList<String>,
-    pub recommended_list_offset: usize,
 }
 
+#[derive(Debug)]
+pub struct ModeState {
+    pub mode: Mode,
+    pub dimensions: Dimensions
+}
+
+#[derive(Debug)]
+pub struct Dimensions {
+    pub width: u16,
+    pub height: u16,
+}
+
+#[derive(Debug)]
 pub enum Mode {
+    // When state is not defined yet
+    Undefined,
     // When navigating through the file logs.
     Viewer,
     // When viewing a line's details.
@@ -27,7 +44,7 @@ pub enum Mode {
 #[derive(Debug, Clone)]
 pub struct FileBatch {
     pub upper: usize,
-    pub lower: usize
+    pub lower: usize,
 }
 
 #[derive(Debug, Clone)]
@@ -43,12 +60,21 @@ pub struct LogFileState {
 impl State {
     pub fn new() -> Self {
         Self {
+            current_mode: create_undefined_mode(),
+            all_modes: Vec::new(),
             ready: false,
             should_quit: false,
             scroll_bar_position: ScrollbarState::default(),
             curr_open_file: None,
+            all_open_files: Vec::new(),
             current_list: SelectableList::default(),
-            recommended_list_offset: 0,
         }
+    }
+}
+
+fn create_undefined_mode() -> ModeState {
+    ModeState {
+        mode: Mode::Undefined,
+        dimensions: Dimensions { width: 0, height: 0 },
     }
 }

@@ -49,15 +49,6 @@ impl<T> SelectableList<T> {
         self.set_offset(offset);
     }
 
-    pub fn set_offset(&mut self, offset: usize) {
-        if self.items.len() <= offset {
-            warn!("Trying to set offset to {} but list only has {} items.", offset, self.items.len());
-            return;
-        }
-        info!("Setting offset to {}", offset);
-        *self.state.offset_mut() = offset;
-    }
-
     pub fn force_select_first(&mut self) {
         self.state.select(Some(0));
     }
@@ -107,6 +98,15 @@ impl<T> SelectableList<T> {
         self.state.select(Some(next_index))
     }
 
+    pub fn set_offset(&mut self, offset: usize) {
+        if self.items.len() <= offset {
+            warn!("Trying to set offset to {} but list only has {} items.", offset, self.items.len());
+            return;
+        }
+        info!("Setting offset to {}", offset);
+        *self.state.offset_mut() = offset;
+    }
+
     pub fn increment_offset(&mut self, amount: usize) {
         if self.items.is_empty() {
             warn!("Selecting previous item in the EMPTY list.");
@@ -122,7 +122,7 @@ impl<T> SelectableList<T> {
                     current_offset.saturating_add(amount)
                 };
         info!("increment_offset to {}", next_offset);
-        _ = self.state.with_offset(next_offset);
+        *self.state.offset_mut() = next_offset;
     }
 
     pub fn decrement_offset(&mut self, amount: usize) {
@@ -140,6 +140,6 @@ impl<T> SelectableList<T> {
                     current_offset.saturating_sub(amount)
                 };
         info!("decrement_offset to {}", next_offset);
-        _ = self.state.with_offset(next_offset);
+        *self.state.offset_mut() = next_offset;
     }
 }
