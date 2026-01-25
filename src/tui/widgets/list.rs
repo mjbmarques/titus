@@ -5,6 +5,8 @@ use ratatui::widgets::{ListState};
 pub struct SelectableList<T> {
     pub items: Vec<T>,
     pub state: ListState,
+    pub horizontal_offset: usize,
+    pub max_horizontal_offset: usize,
 }
 
 impl<T> Default for SelectableList<T>  {
@@ -20,7 +22,12 @@ impl<T> SelectableList<T> {
     pub fn new(items: Vec<T>, mut state: ListState) -> Self {
         // If items.size == 0, it doesn't matter if we select 0 or None.
         state.select(Some(0));
-        Self { items, state }
+        Self {
+            items,
+            state,
+            horizontal_offset: 0,
+            max_horizontal_offset: 100
+        }
     }
 
     // Instantiate with items but with a default/non-implemented table state.
@@ -33,6 +40,32 @@ impl<T> SelectableList<T> {
     pub fn get_selected_item(&self) -> Option<&T> {
         let selected_index = self.state.selected()?;
         self.items.get(selected_index)
+    }
+
+    pub fn set_horizontal_offset(&mut self, offset: usize) {
+        if offset > self.max_horizontal_offset {
+            warn!("Trying to set horizontal offset to {} but max is {}.", offset, self.max_horizontal_offset);
+            return;
+        }
+        info!("Setting horizontal offset to {}", offset);
+        self.horizontal_offset = offset;
+    }
+
+    pub fn increase_horizontal_offset(&mut self, amount: usize) {
+        let next_offset = self.horizontal_offset.saturating_add(amount);
+        if next_offset > self.max_horizontal_offset {
+            warn!("Trying to increase horizontal offset to {} but max is {}.", next_offset, self.max_horizontal_offset);
+            self.horizontal_offset = self.max_horizontal_offset;
+        } else {
+            info!("Increasing horizontal offset to {}", next_offset);
+            self.horizontal_offset = next_offset;
+        }
+    }
+
+    pub fn decrease_horizontal_offset(&mut self, amount: usize) {
+        let next_offset = self.horizontal_offset.saturating_sub(amount);
+        info!("Decreasing horizontal offset to {}", next_offset);
+        self.horizontal_offset = next_offset;
     }
 
     pub fn force_select_item(&mut self, index: usize) {

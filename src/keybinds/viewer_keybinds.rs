@@ -10,8 +10,10 @@ pub fn try_keypress(state: &mut State, event: KeyEvent) {
     match event.code {
         KeyCode::Up => select_prev(state),
         KeyCode::Down => select_next(state),
-        KeyCode::Left => state.current_list.force_select_first(),
-        KeyCode::Right => state.current_list.force_select_last(),
+        // KeyCode::Left => state.current_list.force_select_first(),
+        // KeyCode::Right => state.current_list.force_select_last(),
+        KeyCode::Left => state.current_list.decrease_horizontal_offset(1),
+        KeyCode::Right => state.current_list.increase_horizontal_offset(1),
         // KeyCode::PageUp => state.item_list.select_prev(state.page_size.max(1)),
         // KeyCode::PageDown => state.item_list.select_next(state.page_size.max(1)),
         KeyCode::Char(c) => {

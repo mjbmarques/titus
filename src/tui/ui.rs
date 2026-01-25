@@ -87,7 +87,8 @@ fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
     update_mode_dimensions(state, chunk);
     error!("[TEST] - chunk height: {}, width: {}", chunk.height, chunk.width);
     frame.render_stateful_widget(
-        List::new(state.current_list.items.iter().map(|item| ListItem::new(item.as_str())))
+        List::new(state.current_list.items.iter().map(|item|
+            ListItem::new(item.chars().skip(state.current_list.horizontal_offset).collect::<String>())))
             .add_modifier(Modifier::BOLD)
             .highlight_style(Style::default()
                 .add_modifier(Modifier::BOLD)
