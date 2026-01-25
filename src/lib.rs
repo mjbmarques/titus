@@ -9,8 +9,8 @@ use std::{io};
 use std::io::Stdout;
 use log::debug;
 use ratatui::crossterm::event::KeyEvent;
-use crate::tui::event::EventHandler;
-use crate::tui::event::Event;
+use crate::tui::tui_event::TuiEventHandler;
+use crate::tui::tui_event::TuiEvent;
 use crate::tui::{file_io, Tui};
 use crate::tui::state::{FileBatch, LogFileState};
 use crate::tui::widgets::list::SelectableList;
@@ -23,7 +23,7 @@ pub fn start_tui() {
         return;
     }
 
-    let events = EventHandler::new(250);
+    let events = TuiEventHandler::new(250);
 
     let mut state: State = State::new();
     let terminal = terminal.unwrap();
@@ -67,23 +67,23 @@ fn tui_loop(my_tui: &mut Tui<CrosstermBackend<Stdout>>, state: &mut State) -> Re
     my_tui.draw(state);
 
     match my_tui.events.next()? {
-        Event::Key(event) => {
+        TuiEvent::Key(event) => {
             debug!("Key event: {:?}", event);
             keybinds::try_keybinds(state, event);
         },
-        Event::FocusGained => {
+        TuiEvent::FocusGained => {
             debug!("Got focus gained event");
         },
-        Event::FocusLost => {
+        TuiEvent::FocusLost => {
             debug!("Got focus lost event");
         },
-        Event::Mouse(mouse_event) => {
+        TuiEvent::Mouse(mouse_event) => {
             debug!("Got mouse event: {:?}", mouse_event);
         },
-        Event::Resize(w, h) => {
+        TuiEvent::Resize(w, h) => {
             debug!("Resize event: width: {}, height: {}", w, h);
         },
-        Event::Paste(value) => {
+        TuiEvent::Paste(value) => {
             debug!("Got paste event: {}", value);
         },
     }

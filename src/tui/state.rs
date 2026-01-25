@@ -1,10 +1,12 @@
 use ratatui::widgets::ScrollbarState;
+use crate::tui::event::EventHandler;
 use crate::tui::widgets::list::SelectableList;
 
 #[derive(Debug)]
 pub struct State {
     pub current_mode: ModeState,
     pub all_modes: Vec<ModeState>, // TODO: implement mode switching and management.
+    pub events: EventHandler,
     pub scroll_bar_position: ScrollbarState,
     pub ready: bool,
     pub should_quit: bool,

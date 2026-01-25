@@ -1,24 +1,14 @@
 use std::sync::{mpsc, Arc};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::{Sender, Receiver};
-use ratatui::crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
-use std::{sync, thread};
-use std::error::Error;
-use std::time::{Duration, Instant};
-use log::{debug, info};
+use std::sync::mpsc::{Receiver, Sender};
+use std::thread;
+use log::info;
 
 #[derive(Debug)]
-pub enum Event {
-    // Key Event
-    Key(KeyEvent),
-    FocusGained,
-    FocusLost,
-    Mouse(MouseEvent),
-    Resize(u16, u16),
-    Paste(String),
+pub enum Event<> {
+    FileContent,
 }
 
-#[derive(Debug)]
 pub struct EventHandler {
     pub sender: Sender<Event>,
     pub receiver: Receiver<Event>,
@@ -28,10 +18,10 @@ pub struct EventHandler {
 }
 
 impl EventHandler {
-    pub fn new(tick_rate: u64) -> Self {
+    pub fn new() -> Self {
         let (sender, receiver) = mpsc::channel();
         let active = Arc::new(AtomicBool::new(true));
-        let handler = setup_thread(sender.clone(), tick_rate, active.clone());
+        let handler = setup_thread();
         Self {
             sender,
             receiver,
@@ -43,7 +33,7 @@ impl EventHandler {
     pub fn stop(&mut self) {
         self.active.store(false, Ordering::Relaxed);
     }
-
+    
     pub fn next(&self) -> Result<Event, String> {
         info!("event next called");
         match self.receiver.recv() {
@@ -56,40 +46,8 @@ impl EventHandler {
     }
 }
 
-fn setup_thread(sender: Sender<Event>, tick_rate: u64, is_active: Arc<AtomicBool>) -> thread::JoinHandle<()> {
-    let tick_duration = Duration::from_millis(tick_rate);
-
-
+fn setup_thread() -> thread::JoinHandle<()> {
     thread::spawn(move || {
-        let mut last_tick = Instant::now();
-
-        while is_active.load(Ordering::Relaxed) {
-            let timeout = calculate_timeout(&tick_duration, &last_tick);
-            handle_tui_events(&sender, timeout);
-
-            if last_tick.elapsed().ge(&tick_duration) {
-                last_tick = Instant::now();
-            }
-        }
+        // Event handling logic here
     })
-}
-
-fn handle_tui_events(sender: &Sender<Event>, timeout: Duration) {
-    if event::poll(timeout).expect("event polling failed") {
-        match event::read().expect("event reading failed") {
-            CrosstermEvent::FocusGained => { sender.send(Event::FocusGained) },
-            CrosstermEvent::FocusLost => { sender.send(Event::FocusLost) },
-            CrosstermEvent::Key(key) => { sender.send(Event::Key(key)) },
-            CrosstermEvent::Mouse(mouse) => { sender.send(Event::Mouse(mouse)) },
-            CrosstermEvent::Resize(w, h) => { sender.send(Event::Resize(w, h)) },
-            CrosstermEvent::Paste(value) => { sender.send(Event::Paste(value)) },
-        }.expect("failed to send event through channel");
-
-    }
-}
-
-fn calculate_timeout(tick_rate: &Duration, last_tick: &Instant) -> Duration {
-    tick_rate
-        .checked_sub(last_tick.elapsed())
-        .unwrap_or(*tick_rate)
 }

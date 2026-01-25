@@ -3,23 +3,24 @@ use ratatui::backend::Backend;
 use ratatui::crossterm::event::{DisableMouseCapture, EnableMouseCapture};
 use ratatui::crossterm::terminal::{self, EnterAlternateScreen, LeaveAlternateScreen};
 use ratatui::Terminal;
-use crate::tui::event::EventHandler;
+use crate::tui::tui_event::TuiEventHandler;
 use crate::tui::state::State;
 
 pub mod state;
-pub mod event;
+pub mod tui_event;
 mod ui;
 pub mod file_io;
 pub mod widgets;
 pub mod colors;
+mod event;
 
 pub struct Tui<B: Backend> {
     terminal: Terminal<B>,
-    pub events: EventHandler,
+    pub events: TuiEventHandler,
 }
 
 impl<B: Backend> Tui<B> {
-    pub fn new(terminal: Terminal<B>, events: EventHandler) -> Self {
+    pub fn new(terminal: Terminal<B>, events: TuiEventHandler) -> Self {
         Self { terminal, events }
     }
 
