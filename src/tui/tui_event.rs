@@ -1,11 +1,12 @@
-use std::sync::{mpsc, Arc};
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::{Sender, Receiver};
-use ratatui::crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
-use std::{sync, thread};
-use std::error::Error;
-use std::time::{Duration, Instant};
 use log::{debug, info};
+use ratatui::crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
+use std::error::Error;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::mpsc::{Receiver, Sender};
+use std::sync::{Arc, mpsc};
+use std::time::{Duration, Instant};
+use std::{sync, thread};
+use crate::tui::state::AggregateEvent;
 
 #[derive(Debug)]
 pub enum TuiEvent {
@@ -20,21 +21,18 @@ pub enum TuiEvent {
 
 #[derive(Debug)]
 pub struct TuiEventHandler {
-    pub sender: Sender<TuiEvent>,
-    pub receiver: Receiver<TuiEvent>,
+    pub sender: Sender<AggregateEvent>,
     pub handler: thread::JoinHandle<()>,
     // Is the event handler active / listening for events.
     pub active: Arc<AtomicBool>,
 }
 
 impl TuiEventHandler {
-    pub fn new(tick_rate: u64) -> Self {
-        let (sender, receiver) = mpsc::channel();
+    pub fn new(sender: Sender<AggregateEvent>, tick_rate: u64) -> Self {
         let active = Arc::new(AtomicBool::new(true));
         let handler = setup_thread(sender.clone(), tick_rate, active.clone());
         Self {
             sender,
-            receiver,
             handler,
             active,
         }
@@ -43,22 +41,14 @@ impl TuiEventHandler {
     pub fn stop(&mut self) {
         self.active.store(false, Ordering::Relaxed);
     }
-
-    pub fn next(&self) -> Result<TuiEvent, String> {
-        info!("event next called");
-        match self.receiver.recv() {
-            Ok(event) => {
-                // debug!("event received: {:?}", event);
-                Ok(event)
-            },
-            Err(_) => Err(String::from("Failed to receive event")),
-        }
-    }
 }
 
-fn setup_thread(sender: Sender<TuiEvent>, tick_rate: u64, is_active: Arc<AtomicBool>) -> thread::JoinHandle<()> {
+fn setup_thread(
+    sender: Sender<AggregateEvent>,
+    tick_rate: u64,
+    is_active: Arc<AtomicBool>,
+) -> thread::JoinHandle<()> {
     let tick_duration = Duration::from_millis(tick_rate);
-
 
     thread::spawn(move || {
         let mut last_tick = Instant::now();
@@ -74,17 +64,17 @@ fn setup_thread(sender: Sender<TuiEvent>, tick_rate: u64, is_active: Arc<AtomicB
     })
 }
 
-fn handle_tui_events(sender: &Sender<TuiEvent>, timeout: Duration) {
+fn handle_tui_events(sender: &Sender<AggregateEvent>, timeout: Duration) {
     if event::poll(timeout).expect("event polling failed") {
         match event::read().expect("event reading failed") {
-            CrosstermEvent::FocusGained => { sender.send(TuiEvent::FocusGained) },
-            CrosstermEvent::FocusLost => { sender.send(TuiEvent::FocusLost) },
-            CrosstermEvent::Key(key) => { sender.send(TuiEvent::Key(key)) },
-            CrosstermEvent::Mouse(mouse) => { sender.send(TuiEvent::Mouse(mouse)) },
-            CrosstermEvent::Resize(w, h) => { sender.send(TuiEvent::Resize(w, h)) },
-            CrosstermEvent::Paste(value) => { sender.send(TuiEvent::Paste(value)) },
-        }.expect("failed to send event through channel");
-
+            CrosstermEvent::FocusGained => sender.send(AggregateEvent::Tui(TuiEvent::FocusGained)),
+            CrosstermEvent::FocusLost => sender.send(AggregateEvent::Tui(TuiEvent::FocusLost)),
+            CrosstermEvent::Key(key) => sender.send(AggregateEvent::Tui(TuiEvent::Key(key))),
+            CrosstermEvent::Mouse(mouse) => sender.send(AggregateEvent::Tui(TuiEvent::Mouse(mouse))),
+            CrosstermEvent::Resize(w, h) => sender.send(AggregateEvent::Tui(TuiEvent::Resize(w, h))),
+            CrosstermEvent::Paste(value) => sender.send(AggregateEvent::Tui(TuiEvent::Paste(value))),
+        }
+        .expect("failed to send event through channel");
     }
 }
 

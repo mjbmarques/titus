@@ -1,7 +1,7 @@
+use log::info;
 use std::env;
 use std::process::exit;
 use titus::start_tui;
-use log::{info};
 
 fn main() {
     log4rs::init_file("config/log4rs.yaml", Default::default())
@@ -10,7 +10,12 @@ fn main() {
     info!("Starting TUI application...");
     let args: Vec<String> = env::args().collect();
     info!("Args: {:?}", args);
-    start_tui();
+    let file_to_open = if args.len() > 1 {
+        Some(args[1].clone())
+    } else {
+        None
+    };
+    start_tui(file_to_open);
     info!("TUI application has exiting...");
     exit(0);
 }

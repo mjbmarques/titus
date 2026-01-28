@@ -1,5 +1,5 @@
 use log::{info, warn};
-use ratatui::widgets::{ListState};
+use ratatui::widgets::ListState;
 
 #[derive(Debug, Clone)]
 pub struct SelectableList<T> {
@@ -9,15 +9,13 @@ pub struct SelectableList<T> {
     pub max_horizontal_offset: usize,
 }
 
-impl<T> Default for SelectableList<T>  {
-
+impl<T> Default for SelectableList<T> {
     // default implementation instantiates with an empty list and default table state.
     fn default() -> Self {
         Self::with_items(Vec::new())
     }
 }
 impl<T> SelectableList<T> {
-
     // Instantiate with items and a given table state.
     pub fn new(items: Vec<T>, mut state: ListState) -> Self {
         // If items.size == 0, it doesn't matter if we select 0 or None.
@@ -26,7 +24,7 @@ impl<T> SelectableList<T> {
             items,
             state,
             horizontal_offset: 0,
-            max_horizontal_offset: 100
+            max_horizontal_offset: 100,
         }
     }
 
@@ -44,7 +42,10 @@ impl<T> SelectableList<T> {
 
     pub fn set_horizontal_offset(&mut self, offset: usize) {
         if offset > self.max_horizontal_offset {
-            warn!("Trying to set horizontal offset to {} but max is {}.", offset, self.max_horizontal_offset);
+            warn!(
+                "Trying to set horizontal offset to {} but max is {}.",
+                offset, self.max_horizontal_offset
+            );
             return;
         }
         info!("Setting horizontal offset to {}", offset);
@@ -54,7 +55,10 @@ impl<T> SelectableList<T> {
     pub fn increase_horizontal_offset(&mut self, amount: usize) {
         let next_offset = self.horizontal_offset.saturating_add(amount);
         if next_offset > self.max_horizontal_offset {
-            warn!("Trying to increase horizontal offset to {} but max is {}.", next_offset, self.max_horizontal_offset);
+            warn!(
+                "Trying to increase horizontal offset to {} but max is {}.",
+                next_offset, self.max_horizontal_offset
+            );
             self.horizontal_offset = self.max_horizontal_offset;
         } else {
             info!("Increasing horizontal offset to {}", next_offset);
@@ -70,7 +74,11 @@ impl<T> SelectableList<T> {
 
     pub fn force_select_item(&mut self, index: usize) {
         if self.items.len() <= index {
-            warn!("Trying to select item at index {} but list only has {} items.", index, self.items.len());
+            warn!(
+                "Trying to select item at index {} but list only has {} items.",
+                index,
+                self.items.len()
+            );
         } else {
             info!("Forcing selection to index {}", index);
             self.state.select(Some(index))
@@ -104,7 +112,7 @@ impl<T> SelectableList<T> {
                 } else {
                     i.saturating_add(amount)
                 }
-            },
+            }
             None => 0,
         };
         info!("select_next to index {}", next_index);
@@ -124,7 +132,7 @@ impl<T> SelectableList<T> {
                 } else {
                     i.saturating_sub(amount)
                 }
-            },
+            }
             None => 0,
         };
         info!("select_prev to index {}", next_index);
@@ -133,7 +141,11 @@ impl<T> SelectableList<T> {
 
     pub fn set_offset(&mut self, offset: usize) {
         if self.items.len() <= offset {
-            warn!("Trying to set offset to {} but list only has {} items.", offset, self.items.len());
+            warn!(
+                "Trying to set offset to {} but list only has {} items.",
+                offset,
+                self.items.len()
+            );
             return;
         }
         info!("Setting offset to {}", offset);
@@ -147,13 +159,12 @@ impl<T> SelectableList<T> {
         }
 
         let current_offset = self.state.offset();
-        let next_offset =
-                if current_offset.saturating_add(amount) >= self.items.len() {
-                    // set to max offset
-                    self.items.len() - 1
-                } else {
-                    current_offset.saturating_add(amount)
-                };
+        let next_offset = if current_offset.saturating_add(amount) >= self.items.len() {
+            // set to max offset
+            self.items.len() - 1
+        } else {
+            current_offset.saturating_add(amount)
+        };
         info!("increment_offset to {}", next_offset);
         *self.state.offset_mut() = next_offset;
     }
@@ -165,13 +176,12 @@ impl<T> SelectableList<T> {
         }
 
         let current_offset = self.state.offset();
-        let next_offset =
-                if current_offset.saturating_sub(amount) <= 0 {
-                    // set to 0
-                    0
-                } else {
-                    current_offset.saturating_sub(amount)
-                };
+        let next_offset = if current_offset.saturating_sub(amount) <= 0 {
+            // set to 0
+            0
+        } else {
+            current_offset.saturating_sub(amount)
+        };
         info!("decrement_offset to {}", next_offset);
         *self.state.offset_mut() = next_offset;
     }

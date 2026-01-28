@@ -1,53 +1,54 @@
-use std::sync::{mpsc, Arc};
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::{Receiver, Sender};
+use crate::tasks::run_task;
+use std::sync::mpsc::{Sender};
 use std::thread;
-use log::info;
+use crate::tui::state::AggregateEvent;
 
 #[derive(Debug)]
-pub enum Event<> {
-    FileContent,
+pub enum EventResponse {
+    FileContent(String, Vec<String>),
+    Error(EventError),
 }
 
-pub struct EventHandler {
-    pub sender: Sender<Event>,
-    pub receiver: Receiver<Event>,
-    pub handler: thread::JoinHandle<()>,
+#[derive(Debug)]
+pub enum EventError {
+    Unknown(String),
+    FileNotFound(String),
+}
+
+#[derive(Debug)]
+pub enum EventRequest {
+    LoadFile(String),
+}
+
+#[derive(Debug)]
+pub struct TaskScheduler {
+    // sender to send event responses back to the main thread.
+    pub sender: Sender<AggregateEvent>,
+    // TODO: handle handlers cleanup/deletion when they finish.
+    pub handlers: Vec<thread::JoinHandle<()>>,
     // Is the event handler active / listening for events.
-    pub active: Arc<AtomicBool>,
+    pub active: bool,
 }
 
-impl EventHandler {
-    pub fn new() -> Self {
-        let (sender, receiver) = mpsc::channel();
-        let active = Arc::new(AtomicBool::new(true));
-        let handler = setup_thread();
+impl TaskScheduler {
+    pub fn new(sender: Sender<AggregateEvent>) -> Self {
+        let active = true;
         Self {
             sender,
-            receiver,
-            handler,
+            handlers: Vec::new(),
             active,
         }
     }
 
     pub fn stop(&mut self) {
-        self.active.store(false, Ordering::Relaxed);
+        self.active = false;
     }
-    
-    pub fn next(&self) -> Result<Event, String> {
-        info!("event next called");
-        match self.receiver.recv() {
-            Ok(event) => {
-                // debug!("event received: {:?}", event);
-                Ok(event)
-            },
-            Err(_) => Err(String::from("Failed to receive event")),
-        }
-    }
-}
 
-fn setup_thread() -> thread::JoinHandle<()> {
-    thread::spawn(move || {
-        // Event handling logic here
-    })
+    pub fn trigger_task(&mut self, task_type: EventRequest) {
+        let sender_clone = self.sender.clone();
+        let handler = thread::spawn(move || {
+            run_task(task_type, sender_clone);
+        });
+        self.handlers.push(handler);
+    }
 }

@@ -1,12 +1,14 @@
-use ratatui::widgets::ScrollbarState;
-use crate::tui::event::EventHandler;
+use std::sync::mpsc::Sender;
+use crate::tui::event::{TaskScheduler, EventResponse};
 use crate::tui::widgets::list::SelectableList;
+use ratatui::widgets::ScrollbarState;
+use crate::tui::tui_event::TuiEvent;
 
 #[derive(Debug)]
 pub struct State {
     pub current_mode: ModeState,
     pub all_modes: Vec<ModeState>, // TODO: implement mode switching and management.
-    pub events: EventHandler,
+    pub task_scheduler: TaskScheduler,
     pub scroll_bar_position: ScrollbarState,
     pub ready: bool,
     pub should_quit: bool,
@@ -17,10 +19,15 @@ pub struct State {
     pub current_list: SelectableList<String>,
 }
 
+pub enum AggregateEvent {
+    Tui(TuiEvent),
+    Task(EventResponse)
+}
+
 #[derive(Debug)]
 pub struct ModeState {
     pub mode: Mode,
-    pub dimensions: Dimensions
+    pub dimensions: Dimensions,
 }
 
 #[derive(Debug)]
@@ -60,10 +67,12 @@ pub struct LogFileState {
 }
 
 impl State {
-    pub fn new() -> Self {
+    pub fn new(sender: Sender<AggregateEvent>) -> Self {
+
         Self {
             current_mode: create_undefined_mode(),
             all_modes: Vec::new(),
+            task_scheduler: TaskScheduler::new(sender),
             ready: false,
             should_quit: false,
             scroll_bar_position: ScrollbarState::default(),
@@ -77,6 +86,9 @@ impl State {
 fn create_undefined_mode() -> ModeState {
     ModeState {
         mode: Mode::Undefined,
-        dimensions: Dimensions { width: 0, height: 0 },
+        dimensions: Dimensions {
+            width: 0,
+            height: 0,
+        },
     }
 }

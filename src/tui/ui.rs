@@ -1,14 +1,14 @@
+use crate::State;
+use crate::tui::colors;
+use crate::tui::state::Dimensions;
 use log::{debug, error, info};
 use ratatui::Frame;
 use ratatui::layout::{Alignment, Constraint, Margin, Rect};
 use ratatui::prelude::{Direction, Layout};
 use ratatui::style::{Color, Modifier, Style, Styled, Stylize};
-use ratatui::{widgets};
 use ratatui::text::{Line, Span};
+use ratatui::widgets;
 use ratatui::widgets::{Block, List, ListItem, Paragraph};
-use crate::State;
-use crate::tui::colors;
-use crate::tui::state::Dimensions;
 
 /// Key bindings.
 const KEY_BINDINGS: &[(&str, &str)] = &[
@@ -27,9 +27,9 @@ pub fn render(state: &mut State, frame: &mut Frame) {
         Direction::Vertical,
         [Constraint::Length(3), Constraint::Min(0)],
     )
-        .direction(Direction::Vertical)
-        .margin(1)
-        .split(frame.area());
+    .direction(Direction::Vertical)
+    .margin(1)
+    .split(frame.area());
 
     render_main_header(state, frame, layout[0]);
     render_main_log_view(state, frame, layout[1]);
@@ -41,16 +41,13 @@ fn render_main_header(state: &State, frame: &mut Frame, own_chunk: Rect) {
             .title(vec![
                 " | ".fg(colors::MEDIUM_GRAY),
                 "titus".fg(colors::LIGHT_PURPLE),
-                " | ".fg(colors::MEDIUM_GRAY)
+                " | ".fg(colors::MEDIUM_GRAY),
             ])
             .title_alignment(Alignment::Center),
-        own_chunk
+        own_chunk,
     );
 
-    let layout = Layout::new(
-        Direction::Horizontal,
-        [Constraint::Percentage(100)],
-    )
+    let layout = Layout::new(Direction::Horizontal, [Constraint::Percentage(100)])
         .direction(Direction::Horizontal)
         .margin(1)
         .split(own_chunk);
@@ -58,11 +55,9 @@ fn render_main_header(state: &State, frame: &mut Frame, own_chunk: Rect) {
     if state.curr_open_file.is_some() {
         frame.render_widget(
             Paragraph::new(state.curr_open_file.as_ref().unwrap().file_name.as_str()),
-            layout[0]
+            layout[0],
         );
     }
-
-
 }
 fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
     // render outside block first
@@ -73,7 +68,7 @@ fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
         .title(vec![
             " | ".fg(colors::MEDIUM_GRAY),
             "log view".fg(colors::LIGHT_GRAY),
-            " | ".fg(colors::MEDIUM_GRAY)
+            " | ".fg(colors::MEDIUM_GRAY),
         ])
         .title_alignment(Alignment::Center)
         .title_bottom(generate_footer_text());
@@ -85,18 +80,28 @@ fn render_main_log_view(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
 fn render_viewer_content(state: &mut State, frame: &mut Frame, chunk: Rect) {
     info!("render viewer content");
     update_mode_dimensions(state, chunk);
-    error!("[TEST] - chunk height: {}, width: {}", chunk.height, chunk.width);
+    debug!(
+        "[TEST] - chunk height: {}, width: {}",
+        chunk.height, chunk.width
+    );
     frame.render_stateful_widget(
-        List::new(state.current_list.items.iter().map(|item|
-            ListItem::new(item.chars().skip(state.current_list.horizontal_offset).collect::<String>())))
-            .add_modifier(Modifier::BOLD)
-            .highlight_style(Style::default()
+        List::new(state.current_list.items.iter().map(|item| {
+            ListItem::new(
+                item.chars()
+                    .skip(state.current_list.horizontal_offset)
+                    .collect::<String>(),
+            )
+        }))
+        .add_modifier(Modifier::BOLD)
+        .highlight_style(
+            Style::default()
                 .add_modifier(Modifier::BOLD)
                 .add_modifier(Modifier::REVERSED)
-                .bg(colors::DIM_YELLOW))
-            .highlight_symbol("> "),
+                .bg(colors::DIM_YELLOW),
+        )
+        .highlight_symbol("> "),
         chunk,
-        &mut state.current_list.state
+        &mut state.current_list.state,
     );
 }
 
@@ -105,18 +110,20 @@ fn update_mode_dimensions(state: &mut State, chunk: Rect) {
         width: chunk.width,
         height: chunk.height,
     };
-    debug!("Updated mode {:?} with dimensions: {:?}",
-        state.current_mode.mode, state.current_mode.dimensions);
+    debug!(
+        "Updated mode {:?} with dimensions: {:?}",
+        state.current_mode.mode, state.current_mode.dimensions
+    );
 }
 
 fn generate_footer_text() -> Line<'static> {
-    let separator = Style::default()
-        .fg(colors::WEAK_BLUE);
+    let separator = Style::default().fg(colors::WEAK_BLUE);
     let footer = Style::default()
         .bg(colors::BLACK_BLUE)
         .fg(colors::LIGHT_BLUE);
 
-    let line = KEY_BINDINGS.iter()
+    let line = KEY_BINDINGS
+        .iter()
         .enumerate()
         .flat_map(|(i, (keys, desc))| {
             vec![
