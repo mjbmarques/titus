@@ -19,6 +19,7 @@ Status levels: Not Planned, Planning-Candidate, Planning, Planned, In Progress, 
 
 ## Feature Plan
 
+- [ ] Refer to detailed plans in `docs/feature-plans/README.md`
 - [ ] File import - Priority: High
     - [x] import from command line argument
     - shortcut to open a dialog for importing a file
