@@ -23,7 +23,7 @@ Add multiple selectable themes so users can switch palettes without modifying th
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/theme-support/theme-selector.ratui`.
+See `docs/feature-plans/demos/theme-support/theme-selector.ratui` and `docs/feature-plans/demos/theme-support/theme-selector.png`.
 
 ### Implementation Plan
 
@@ -54,7 +54,7 @@ pub struct Theme {
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/theme-support/config-file.ratui`.
+See `docs/feature-plans/demos/theme-support/config-file.ratui` and `docs/feature-plans/demos/theme-support/config-file.png`.
 
 ### Implementation Plan
 
@@ -77,7 +77,7 @@ See `docs/feature-plans/demos/theme-support/config-file.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/theme-support/runtime-preview.ratui`.
+See `docs/feature-plans/demos/theme-support/runtime-preview.ratui` and `docs/feature-plans/demos/theme-support/runtime-preview.png`.
 
 ### Implementation Plan
 
@@ -112,4 +112,3 @@ Implement Solution A minimal:
 - [ ] Theme can be switched at runtime.
 - [ ] All UI areas update to new theme.
 - [ ] Config fallback works.
-

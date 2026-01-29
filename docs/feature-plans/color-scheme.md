@@ -23,7 +23,7 @@ Define a visually appealing default color scheme for the TUI. The scheme should 
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/color-scheme/dracula-scheme.ratui`.
+See `docs/feature-plans/demos/color-scheme/dracula-scheme.ratui` and `docs/feature-plans/demos/color-scheme/dracula-scheme.png`.
 
 ### Implementation Plan
 
@@ -46,7 +46,7 @@ See `docs/feature-plans/demos/color-scheme/dracula-scheme.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/color-scheme/solarized-dark.ratui`.
+See `docs/feature-plans/demos/color-scheme/solarized-dark.ratui` and `docs/feature-plans/demos/color-scheme/solarized-dark.png`.
 
 ### Implementation Plan
 
@@ -66,7 +66,7 @@ See `docs/feature-plans/demos/color-scheme/solarized-dark.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/color-scheme/gruvbox-dark.ratui`.
+See `docs/feature-plans/demos/color-scheme/gruvbox-dark.ratui` and `docs/feature-plans/demos/color-scheme/gruvbox-dark.png`.
 
 ### Implementation Plan
 
@@ -99,4 +99,3 @@ Implement Solution A minimal:
 - [ ] Colors are readable in typical terminal emulators.
 - [ ] Highlighted selection is clearly visible.
 - [ ] Headers/footers readable at small widths.
-

@@ -19,11 +19,11 @@ Enable the log viewer to open and switch between multiple files in the same sess
 ### UX Summary
 
 - Tabs at the top show open file names.
-- `Ctrl+W` cycles through tabs.
+- `Alt+Tab` cycles through tabs to avoid conflict with close-tab conventions.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/multiple-files/tab-bar.ratui`.
+See `docs/feature-plans/demos/multiple-files/tab-bar.ratui` and `docs/feature-plans/demos/multiple-files/tab-bar.png`.
 
 ### Implementation Plan
 
@@ -45,7 +45,7 @@ See `docs/feature-plans/demos/multiple-files/tab-bar.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/multiple-files/sidebar-switcher.ratui`.
+See `docs/feature-plans/demos/multiple-files/sidebar-switcher.ratui` and `docs/feature-plans/demos/multiple-files/sidebar-switcher.png`.
 
 ### Implementation Plan
 
@@ -67,7 +67,7 @@ See `docs/feature-plans/demos/multiple-files/sidebar-switcher.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/multiple-files/dropdown-switcher.ratui`.
+See `docs/feature-plans/demos/multiple-files/dropdown-switcher.ratui` and `docs/feature-plans/demos/multiple-files/dropdown-switcher.png`.
 
 ### Implementation Plan
 
@@ -85,7 +85,7 @@ See `docs/feature-plans/demos/multiple-files/dropdown-switcher.ratui`.
 Implement Solution A minimal:
 
 - Render tab bar with active highlight.
-- Add keybind `Ctrl+W` to cycle files.
+- Add keybind `Alt+Tab` to cycle files.
 - Maintain per-file scroll positions.
 
 ## Integration Notes
@@ -104,4 +104,3 @@ Implement Solution A minimal:
 - [ ] Switch between files retains scroll positions.
 - [ ] Active file updates header and list content.
 - [ ] Closing files selects a sensible next file.
-

@@ -25,7 +25,7 @@ Add search/find capabilities to locate log entries by text or patterns, with nav
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/log-search/bottom-bar-search.ratui`.
+See `docs/feature-plans/demos/log-search/bottom-bar-search.ratui` and `docs/feature-plans/demos/log-search/bottom-bar-search.png`.
 
 ### Implementation Plan
 
@@ -60,7 +60,7 @@ pub struct SearchState {
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/log-search/modal-search.ratui`.
+See `docs/feature-plans/demos/log-search/modal-search.ratui` and `docs/feature-plans/demos/log-search/modal-search.png`.
 
 ### Implementation Plan
 
@@ -83,7 +83,7 @@ See `docs/feature-plans/demos/log-search/modal-search.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/log-search/sidebar-search-results.ratui`.
+See `docs/feature-plans/demos/log-search/sidebar-search-results.ratui` and `docs/feature-plans/demos/log-search/sidebar-search-results.png`.
 
 ### Implementation Plan
 
@@ -122,4 +122,3 @@ Implement Solution A for demo:
 - [ ] Next/prev navigation works.
 - [ ] Highlights update correctly.
 - [ ] Works with large files (partial loading).
-

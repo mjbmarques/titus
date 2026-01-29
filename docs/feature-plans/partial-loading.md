@@ -24,7 +24,7 @@ Large log files should not be fully loaded into memory. Implement chunked loadin
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/partial-loading/windowed-view.ratui`.
+See `docs/feature-plans/demos/partial-loading/windowed-view.ratui` and `docs/feature-plans/demos/partial-loading/windowed-view.png`.
 
 ### Implementation Plan
 
@@ -55,7 +55,7 @@ pub struct LogFileState {
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/partial-loading/infinite-scroll.ratui`.
+See `docs/feature-plans/demos/partial-loading/infinite-scroll.ratui` and `docs/feature-plans/demos/partial-loading/infinite-scroll.png`.
 
 ### Implementation Plan
 
@@ -78,7 +78,7 @@ See `docs/feature-plans/demos/partial-loading/infinite-scroll.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/partial-loading/segment-nav.ratui`.
+See `docs/feature-plans/demos/partial-loading/segment-nav.ratui` and `docs/feature-plans/demos/partial-loading/segment-nav.png`.
 
 ### Implementation Plan
 
@@ -116,4 +116,3 @@ Implement Solution A minimal:
 - [ ] Scrolling loads new chunks seamlessly.
 - [ ] Go-to-line triggers window load.
 - [ ] Search uses loaded content and can expand.
-

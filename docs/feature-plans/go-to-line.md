@@ -23,7 +23,7 @@ Provide a quick jump mechanism to move the log viewer to a specific line number.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/go-to-line/modal-input.ratui`.
+See `docs/feature-plans/demos/go-to-line/modal-input.ratui` and `docs/feature-plans/demos/go-to-line/modal-input.png`.
 
 ### Implementation Plan
 
@@ -54,7 +54,7 @@ pub struct GoToLineState {
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/go-to-line/inline-jumpbar.ratui`.
+See `docs/feature-plans/demos/go-to-line/inline-jumpbar.ratui` and `docs/feature-plans/demos/go-to-line/inline-jumpbar.png`.
 
 ### Implementation Plan
 
@@ -75,7 +75,7 @@ See `docs/feature-plans/demos/go-to-line/inline-jumpbar.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/go-to-line/status-prompt.ratui`.
+See `docs/feature-plans/demos/go-to-line/status-prompt.ratui` and `docs/feature-plans/demos/go-to-line/status-prompt.png`.
 
 ### Implementation Plan
 
@@ -98,7 +98,7 @@ Implement Solution C as a minimal demo:
 
 ## Integration Notes
 
-- When partial loading is enabled, jumping to a line should trigger a file batch load (if needed) before updating the list.
+- When partial loading is enabled, jumping to a line should trigger a window load (if needed) before updating the list.
 - Reuse input editor logic from search and file import.
 
 ## Risks & Open Questions
@@ -112,4 +112,3 @@ Implement Solution C as a minimal demo:
 - [ ] Jump moves selection and scroll offset.
 - [ ] Out-of-range input shows feedback.
 - [ ] Works when partial loading is active.
-

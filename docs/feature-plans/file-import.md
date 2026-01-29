@@ -26,7 +26,7 @@ Enable users to import a log file interactively from the TUI. CLI arguments alre
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/file-import/modal-dialog.ratui`.
+See `docs/feature-plans/demos/file-import/modal-dialog.ratui` and `docs/feature-plans/demos/file-import/modal-dialog.png`.
 
 ### Implementation Plan
 
@@ -75,7 +75,7 @@ if matches!(state.current_mode.mode, Mode::FileImport) {
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/file-import/inline-form.ratui`.
+See `docs/feature-plans/demos/file-import/inline-form.ratui` and `docs/feature-plans/demos/file-import/inline-form.png`.
 
 ### Implementation Plan
 
@@ -99,7 +99,7 @@ See `docs/feature-plans/demos/file-import/inline-form.ratui`.
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/file-import/sidebar-browser.ratui`.
+See `docs/feature-plans/demos/file-import/sidebar-browser.ratui` and `docs/feature-plans/demos/file-import/sidebar-browser.png`.
 
 ### Implementation Plan
 
@@ -140,4 +140,3 @@ For demo purposes, implement a lightweight stub that:
 - [ ] Invalid paths show errors.
 - [ ] Valid file dispatches load task.
 - [ ] Logs remain responsive during load.
-
