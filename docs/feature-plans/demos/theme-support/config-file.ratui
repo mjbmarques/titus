@@ -1,0 +1,28 @@
+# Demo sketch: theme defined in config
+
+config/themes.yaml
+------------------
+current: catppuccin-mocha
+
+palettes:
+  catppuccin-mocha:
+    background: "#1E1E2E"
+    foreground: "#CDD6F4"
+    accent: "#CBA6F7"
+    warning: "#F9E2AF"
+
++--------------------------------------------------------------------------------+
+| titus [catppuccin-mocha]                               [log view]              |
++--------------------------------------------------------------------------------+
+| File: /var/log/system.log                                                      |
+|--------------------------------------------------------------------------------|
+| • 12052: INFO  Starting service                                                  |
+| • 12053: INFO  Listening on :8080                                                |
+| • 12054: WARN  Disk usage high                                                   |
+| • 12055: INFO  Health check OK                                                   |
+|                                                                              ▲ |
+|                                                                              │ |
+|                                                                              ▼ |
+|--------------------------------------------------------------------------------|
+| <Theme: ^t> <Search: ^f> <Nav: ↑/↓> <Quit: q>                                   |
++--------------------------------------------------------------------------------+
