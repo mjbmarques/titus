@@ -23,7 +23,7 @@ Enable the log viewer to open and switch between multiple files in the same sess
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/multiple-files/tab-bar.ratui` and `docs/feature-plans/demos/multiple-files/tab-bar.png`.
+See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-tabs`) and output files `docs/feature-plans/demos/multiple-files/tab-bar.json` + `docs/feature-plans/demos/multiple-files/tab-bar.png`.
 
 ### Implementation Plan
 
@@ -45,7 +45,7 @@ See `docs/feature-plans/demos/multiple-files/tab-bar.ratui` and `docs/feature-pl
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/multiple-files/sidebar-switcher.ratui` and `docs/feature-plans/demos/multiple-files/sidebar-switcher.png`.
+See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-sidebar`) and output files `docs/feature-plans/demos/multiple-files/sidebar-switcher.json` + `docs/feature-plans/demos/multiple-files/sidebar-switcher.png`.
 
 ### Implementation Plan
 
@@ -67,7 +67,7 @@ See `docs/feature-plans/demos/multiple-files/sidebar-switcher.ratui` and `docs/f
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/multiple-files/dropdown-switcher.ratui` and `docs/feature-plans/demos/multiple-files/dropdown-switcher.png`.
+See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-dropdown`) and output files `docs/feature-plans/demos/multiple-files/dropdown-switcher.json` + `docs/feature-plans/demos/multiple-files/dropdown-switcher.png`.
 
 ### Implementation Plan
 

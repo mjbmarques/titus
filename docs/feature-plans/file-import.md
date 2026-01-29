@@ -26,7 +26,7 @@ Enable users to import a log file interactively from the TUI. CLI arguments alre
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/file-import/modal-dialog.ratui` and `docs/feature-plans/demos/file-import/modal-dialog.png`.
+See demo code in `examples/demo_renderer.rs` (demo key: `file-import-modal`) and output files `docs/feature-plans/demos/file-import/modal-dialog.json` + `docs/feature-plans/demos/file-import/modal-dialog.png`.
 
 ### Implementation Plan
 
@@ -75,7 +75,7 @@ if matches!(state.current_mode.mode, Mode::FileImport) {
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/file-import/inline-form.ratui` and `docs/feature-plans/demos/file-import/inline-form.png`.
+See demo code in `examples/demo_renderer.rs` (demo key: `file-import-inline`) and output files `docs/feature-plans/demos/file-import/inline-form.json` + `docs/feature-plans/demos/file-import/inline-form.png`.
 
 ### Implementation Plan
 
@@ -99,7 +99,7 @@ See `docs/feature-plans/demos/file-import/inline-form.ratui` and `docs/feature-p
 
 ### UI Sketch / Demo
 
-See `docs/feature-plans/demos/file-import/sidebar-browser.ratui` and `docs/feature-plans/demos/file-import/sidebar-browser.png`.
+See demo code in `examples/demo_renderer.rs` (demo key: `file-import-sidebar`) and output files `docs/feature-plans/demos/file-import/sidebar-browser.json` + `docs/feature-plans/demos/file-import/sidebar-browser.png`.
 
 ### Implementation Plan
 
