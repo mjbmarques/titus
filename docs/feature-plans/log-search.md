@@ -25,7 +25,7 @@ Add search/find capabilities to locate log entries by text or patterns, with nav
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `log-search-footer`) and output files `docs/feature-plans/demos/log-search/bottom-bar-search.json` + `docs/feature-plans/demos/log-search/bottom-bar-search.png`.
+See demo project `docs/feature-plans/demos/projects/log-search-footer-demo` and screenshot `docs/feature-plans/demos/log-search/footer.svg`.
 
 ### Implementation Plan
 
@@ -60,7 +60,7 @@ pub struct SearchState {
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `log-search-modal`) and output files `docs/feature-plans/demos/log-search/modal-search.json` + `docs/feature-plans/demos/log-search/modal-search.png`.
+See demo project `docs/feature-plans/demos/projects/log-search-modal-demo` and screenshot `docs/feature-plans/demos/log-search/modal.svg`.
 
 ### Implementation Plan
 
@@ -83,7 +83,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `log-search-modal`) and 
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `log-search-sidebar`) and output files `docs/feature-plans/demos/log-search/sidebar-search-results.json` + `docs/feature-plans/demos/log-search/sidebar-search-results.png`.
+See demo project `docs/feature-plans/demos/projects/log-search-sidebar-demo` and screenshot `docs/feature-plans/demos/log-search/sidebar.svg`.
 
 ### Implementation Plan
 

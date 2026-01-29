@@ -23,7 +23,7 @@ Enable the log viewer to open and switch between multiple files in the same sess
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-tabs`) and output files `docs/feature-plans/demos/multiple-files/tab-bar.json` + `docs/feature-plans/demos/multiple-files/tab-bar.png`.
+See demo project `docs/feature-plans/demos/projects/multiple-files-tabs-demo` and screenshot `docs/feature-plans/demos/multiple-files/tabs.svg`.
 
 ### Implementation Plan
 
@@ -45,7 +45,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-tabs`) a
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-sidebar`) and output files `docs/feature-plans/demos/multiple-files/sidebar-switcher.json` + `docs/feature-plans/demos/multiple-files/sidebar-switcher.png`.
+See demo project `docs/feature-plans/demos/projects/multiple-files-sidebar-demo` and screenshot `docs/feature-plans/demos/multiple-files/sidebar.svg`.
 
 ### Implementation Plan
 
@@ -67,7 +67,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-sidebar`
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `multiple-files-dropdown`) and output files `docs/feature-plans/demos/multiple-files/dropdown-switcher.json` + `docs/feature-plans/demos/multiple-files/dropdown-switcher.png`.
+See demo project `docs/feature-plans/demos/projects/multiple-files-dropdown-demo` and screenshot `docs/feature-plans/demos/multiple-files/dropdown.svg`.
 
 ### Implementation Plan
 

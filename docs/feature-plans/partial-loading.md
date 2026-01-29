@@ -24,7 +24,7 @@ Large log files should not be fully loaded into memory. Implement chunked loadin
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `partial-loading-windowed`) and output files `docs/feature-plans/demos/partial-loading/windowed-view.json` + `docs/feature-plans/demos/partial-loading/windowed-view.png`.
+See demo project `docs/feature-plans/demos/projects/partial-loading-windowed-demo` and screenshot `docs/feature-plans/demos/partial-loading/windowed.svg`.
 
 ### Implementation Plan
 
@@ -55,7 +55,7 @@ pub struct LogFileState {
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `partial-loading-infinite`) and output files `docs/feature-plans/demos/partial-loading/infinite-scroll.json` + `docs/feature-plans/demos/partial-loading/infinite-scroll.png`.
+See demo project `docs/feature-plans/demos/projects/partial-loading-infinite-demo` and screenshot `docs/feature-plans/demos/partial-loading/infinite.svg`.
 
 ### Implementation Plan
 
@@ -78,7 +78,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `partial-loading-infinit
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `partial-loading-segment`) and output files `docs/feature-plans/demos/partial-loading/segment-nav.json` + `docs/feature-plans/demos/partial-loading/segment-nav.png`.
+See demo project `docs/feature-plans/demos/projects/partial-loading-segment-demo` and screenshot `docs/feature-plans/demos/partial-loading/segment.svg`.
 
 ### Implementation Plan
 

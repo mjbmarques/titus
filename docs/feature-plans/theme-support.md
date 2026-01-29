@@ -23,7 +23,7 @@ Add multiple selectable themes so users can switch palettes without modifying th
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `theme-support-selector`) and output files `docs/feature-plans/demos/theme-support/theme-selector.json` + `docs/feature-plans/demos/theme-support/theme-selector.png`.
+See demo project `docs/feature-plans/demos/projects/theme-support-selector-demo` and screenshot `docs/feature-plans/demos/theme-support/selector.svg`.
 
 ### Implementation Plan
 
@@ -54,7 +54,7 @@ pub struct Theme {
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `theme-support-config`) and output files `docs/feature-plans/demos/theme-support/config-file.json` + `docs/feature-plans/demos/theme-support/config-file.png`.
+See demo project `docs/feature-plans/demos/projects/theme-support-config-demo` and screenshot `docs/feature-plans/demos/theme-support/config.svg`.
 
 ### Implementation Plan
 
@@ -77,7 +77,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `theme-support-config`) 
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `theme-support-preview`) and output files `docs/feature-plans/demos/theme-support/runtime-preview.json` + `docs/feature-plans/demos/theme-support/runtime-preview.png`.
+See demo project `docs/feature-plans/demos/projects/theme-support-preview-demo` and screenshot `docs/feature-plans/demos/theme-support/preview.svg`.
 
 ### Implementation Plan
 

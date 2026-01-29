@@ -23,7 +23,7 @@ Provide a quick jump mechanism to move the log viewer to a specific line number.
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `go-to-line-modal`) and output files `docs/feature-plans/demos/go-to-line/modal-input.json` + `docs/feature-plans/demos/go-to-line/modal-input.png`.
+See demo project `docs/feature-plans/demos/projects/go-to-line-modal-demo` and screenshot `docs/feature-plans/demos/go-to-line/modal.svg`.
 
 ### Implementation Plan
 
@@ -54,7 +54,7 @@ pub struct GoToLineState {
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `go-to-line-inline`) and output files `docs/feature-plans/demos/go-to-line/inline-jumpbar.json` + `docs/feature-plans/demos/go-to-line/inline-jumpbar.png`.
+See demo project `docs/feature-plans/demos/projects/go-to-line-inline-demo` and screenshot `docs/feature-plans/demos/go-to-line/inline.svg`.
 
 ### Implementation Plan
 
@@ -75,7 +75,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `go-to-line-inline`) and
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `go-to-line-status`) and output files `docs/feature-plans/demos/go-to-line/status-prompt.json` + `docs/feature-plans/demos/go-to-line/status-prompt.png`.
+See demo project `docs/feature-plans/demos/projects/go-to-line-status-demo` and screenshot `docs/feature-plans/demos/go-to-line/status.svg`.
 
 ### Implementation Plan
 

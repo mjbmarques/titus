@@ -23,7 +23,7 @@ Define a visually appealing default color scheme for the TUI. The scheme should 
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `color-scheme-dracula`) and output files `docs/feature-plans/demos/color-scheme/dracula-scheme.json` + `docs/feature-plans/demos/color-scheme/dracula-scheme.png`.
+See demo project `docs/feature-plans/demos/projects/color-scheme-dracula-demo` and screenshot `docs/feature-plans/demos/color-scheme/dracula.svg`.
 
 ### Implementation Plan
 
@@ -46,7 +46,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `color-scheme-dracula`) 
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `color-scheme-solarized`) and output files `docs/feature-plans/demos/color-scheme/solarized-dark.json` + `docs/feature-plans/demos/color-scheme/solarized-dark.png`.
+See demo project `docs/feature-plans/demos/projects/color-scheme-solarized-demo` and screenshot `docs/feature-plans/demos/color-scheme/solarized.svg`.
 
 ### Implementation Plan
 
@@ -66,7 +66,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `color-scheme-solarized`
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `color-scheme-gruvbox`) and output files `docs/feature-plans/demos/color-scheme/gruvbox-dark.json` + `docs/feature-plans/demos/color-scheme/gruvbox-dark.png`.
+See demo project `docs/feature-plans/demos/projects/color-scheme-gruvbox-demo` and screenshot `docs/feature-plans/demos/color-scheme/gruvbox.svg`.
 
 ### Implementation Plan
 

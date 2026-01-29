@@ -26,7 +26,7 @@ Enable users to import a log file interactively from the TUI. CLI arguments alre
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `file-import-modal`) and output files `docs/feature-plans/demos/file-import/modal-dialog.json` + `docs/feature-plans/demos/file-import/modal-dialog.png`.
+See demo project `docs/feature-plans/demos/projects/file-import-modal-demo` and screenshot `docs/feature-plans/demos/file-import/modal.svg`.
 
 ### Implementation Plan
 
@@ -75,7 +75,7 @@ if matches!(state.current_mode.mode, Mode::FileImport) {
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `file-import-inline`) and output files `docs/feature-plans/demos/file-import/inline-form.json` + `docs/feature-plans/demos/file-import/inline-form.png`.
+See demo project `docs/feature-plans/demos/projects/file-import-inline-demo` and screenshot `docs/feature-plans/demos/file-import/inline.svg`.
 
 ### Implementation Plan
 
@@ -99,7 +99,7 @@ See demo code in `examples/demo_renderer.rs` (demo key: `file-import-inline`) an
 
 ### UI Sketch / Demo
 
-See demo code in `examples/demo_renderer.rs` (demo key: `file-import-sidebar`) and output files `docs/feature-plans/demos/file-import/sidebar-browser.json` + `docs/feature-plans/demos/file-import/sidebar-browser.png`.
+See demo project `docs/feature-plans/demos/projects/file-import-sidebar-demo` and screenshot `docs/feature-plans/demos/file-import/sidebar.svg`.
 
 ### Implementation Plan
 
