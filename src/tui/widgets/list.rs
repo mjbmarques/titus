@@ -108,7 +108,7 @@ impl<T> SelectableList<T> {
         let next_index = match self.state.selected() {
             Some(i) => {
                 if i.saturating_add(amount) >= self.items.len() {
-                    0
+                    self.items.len().saturating_sub(1)
                 } else {
                     i.saturating_add(amount)
                 }
