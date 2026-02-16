@@ -1,6 +1,9 @@
-use crate::tui::state::State;
+use std::cell::RefCell;
+use std::rc::Rc;
+use crate::tui::state::{Mode, ModeState, State, ViewType};
 use log::debug;
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+use crate::tui::widgets::text_input_cursor::TextInputCursor;
 
 pub fn try_keypress(state: &mut State, event: KeyEvent) {
     if KeyModifiers::CONTROL == event.modifiers {
@@ -45,6 +48,7 @@ fn try_ctrl_mod_keypress(state: &mut State, event: KeyEvent) {
         // KeyCode::Down => state.current_list.increment_offset(1),
         KeyCode::Up => state.current_list.state.scroll_up_by(1),
         KeyCode::Down => state.current_list.state.scroll_down_by(1),
+        KeyCode::Char('f') => find_clicked(state),
         _ => log::warn!("Unhandled PRESS CTRL+key: {:?}", event),
     }
 }
@@ -58,6 +62,18 @@ pub fn try_key_repeat(state: &mut State, event: KeyEvent) {
         KeyCode::Up => select_prev(state),
         KeyCode::Down => select_next(state),
         _ => log::warn!("Unhandled REPEAT key: {:?}", event),
+    }
+}
+
+fn find_clicked(state: &mut State) {
+    let find_mode = Rc::new(RefCell::new(ModeState::new(Mode::Find(TextInputCursor::new_empty(), ViewType::Command))));
+    state.current_mode = find_mode.clone();
+    let exists_find_mode = state.all_modes.iter().any(|mode| {
+        let mode_ref = mode.borrow();
+        matches!(mode_ref.mode, Mode::Find(_, ViewType::Command))
+    });
+    if !exists_find_mode {
+        state.all_modes.push(state.current_mode.clone());
     }
 }
 
