@@ -1,6 +1,7 @@
 mod keybinds;
 mod tasks;
 mod tui;
+mod file;
 
 use crate::tui::event::{EventRequest, EventResponse};
 use crate::tui::state::{AggregateEvent, FileBatch, LogFileState};
@@ -63,7 +64,8 @@ fn tui_loop(
                 handle_tui_events(tui_event, state).expect("handle_tui_events failed");
             }
             AggregateEvent::Task(task_event) => {
-                handle_task_events(task_event, task_adapter, state).expect("handle_task_events failed");
+                handle_task_events(task_event, task_adapter, state)
+                    .expect("handle_task_events failed");
             }
         },
         Err(_) => {
@@ -74,7 +76,11 @@ fn tui_loop(
     Ok(())
 }
 
-fn handle_task_events(task_event: EventResponse, task_adapter: &mut TaskAdapter, state: &mut State) -> Result<(), String> {
+fn handle_task_events(
+    task_event: EventResponse,
+    task_adapter: &mut TaskAdapter,
+    state: &mut State,
+) -> Result<(), String> {
     match task_event {
         EventResponse::FileContent(file_location, content) => {
             task_adapter.file_content(state, file_location, content);
@@ -86,10 +92,7 @@ fn handle_task_events(task_event: EventResponse, task_adapter: &mut TaskAdapter,
     Ok(())
 }
 
-fn handle_tui_events(
-    tui_event: TuiEvent,
-    state: &mut State,
-) -> Result<(), String> {
+fn handle_tui_events(tui_event: TuiEvent, state: &mut State) -> Result<(), String> {
     match tui_event {
         TuiEvent::Key(event) => {
             debug!("Key event: {:?}", event);

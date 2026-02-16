@@ -1,6 +1,6 @@
-use crate::tui::event::{EventRequest, EventResponse};
-use std::sync::mpsc::Sender;
+use crate::tui::event::{EventRequest};
 use crate::tui::state::AggregateEvent;
+use std::sync::mpsc::Sender;
 
 mod file;
 mod task_orchestrator;

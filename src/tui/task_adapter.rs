@@ -9,15 +9,21 @@ impl TaskAdapter {
     pub fn new() -> Self {
         Self { log_file_id: 0 }
     }
-    pub fn file_content(&mut self, state: &mut State, file_location: String, file_content: Vec<String>) {
+    pub fn file_content(
+        &mut self,
+        state: &mut State,
+        file_location: String,
+        file_content: Vec<String>,
+    ) {
         handle_file_content(self, state, file_location, file_content);
     }
 }
-pub fn handle_file_content(task_adapter: &mut TaskAdapter,
-                           state: &mut State,
-                           file_location: String,
-                           file_content: Vec<String>) {
-
+pub fn handle_file_content(
+    task_adapter: &mut TaskAdapter,
+    state: &mut State,
+    file_location: String,
+    file_content: Vec<String>,
+) {
     task_adapter.log_file_id += 1;
 
     let log_file = LogFileState {

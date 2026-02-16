@@ -1,8 +1,8 @@
-use std::sync::mpsc::Sender;
-use crate::tui::event::{TaskScheduler, EventResponse};
+use crate::tui::event::{EventResponse, TaskScheduler};
+use crate::tui::tui_event::TuiEvent;
 use crate::tui::widgets::list::SelectableList;
 use ratatui::widgets::ScrollbarState;
-use crate::tui::tui_event::TuiEvent;
+use std::sync::mpsc::Sender;
 
 #[derive(Debug)]
 pub struct State {
@@ -21,7 +21,7 @@ pub struct State {
 
 pub enum AggregateEvent {
     Tui(TuiEvent),
-    Task(EventResponse)
+    Task(EventResponse),
 }
 
 #[derive(Debug)]
@@ -68,7 +68,6 @@ pub struct LogFileState {
 
 impl State {
     pub fn new(sender: Sender<AggregateEvent>) -> Self {
-
         Self {
             current_mode: create_undefined_mode(),
             all_modes: Vec::new(),

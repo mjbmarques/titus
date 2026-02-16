@@ -1,12 +1,10 @@
-use log::{debug, info};
-use ratatui::crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
-use std::error::Error;
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::{Receiver, Sender};
-use std::sync::{Arc, mpsc};
-use std::time::{Duration, Instant};
-use std::{sync, thread};
 use crate::tui::state::AggregateEvent;
+use ratatui::crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::mpsc::{Sender};
+use std::sync::{Arc};
+use std::time::{Duration, Instant};
+use std::{thread};
 
 #[derive(Debug)]
 pub enum TuiEvent {
@@ -70,9 +68,15 @@ fn handle_tui_events(sender: &Sender<AggregateEvent>, timeout: Duration) {
             CrosstermEvent::FocusGained => sender.send(AggregateEvent::Tui(TuiEvent::FocusGained)),
             CrosstermEvent::FocusLost => sender.send(AggregateEvent::Tui(TuiEvent::FocusLost)),
             CrosstermEvent::Key(key) => sender.send(AggregateEvent::Tui(TuiEvent::Key(key))),
-            CrosstermEvent::Mouse(mouse) => sender.send(AggregateEvent::Tui(TuiEvent::Mouse(mouse))),
-            CrosstermEvent::Resize(w, h) => sender.send(AggregateEvent::Tui(TuiEvent::Resize(w, h))),
-            CrosstermEvent::Paste(value) => sender.send(AggregateEvent::Tui(TuiEvent::Paste(value))),
+            CrosstermEvent::Mouse(mouse) => {
+                sender.send(AggregateEvent::Tui(TuiEvent::Mouse(mouse)))
+            }
+            CrosstermEvent::Resize(w, h) => {
+                sender.send(AggregateEvent::Tui(TuiEvent::Resize(w, h)))
+            }
+            CrosstermEvent::Paste(value) => {
+                sender.send(AggregateEvent::Tui(TuiEvent::Paste(value)))
+            }
         }
         .expect("failed to send event through channel");
     }

@@ -1,7 +1,7 @@
 use crate::tasks::run_task;
-use std::sync::mpsc::{Sender};
-use std::thread;
 use crate::tui::state::AggregateEvent;
+use std::sync::mpsc::Sender;
+use std::thread;
 
 #[derive(Debug)]
 pub enum EventResponse {
