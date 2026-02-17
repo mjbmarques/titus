@@ -7,3 +7,4 @@ Document describing the reported bugs and their progress status.
   - A possible solution would be to have multiple readers open along the "checkpoints" of a file.
 - [ ] There are probably multiple places using `clone()` when it wasn't supposed to. Was done before knowing exactly how it works. Needs to be fixed.
   - Probably need to use some sort of `Arc` of `Rc` instead of cloning the whole data. Investigate further.
+- [ ] Writing to the find text input takes too long, if keys are spammed, the user can stop typing and the remaining letters continue to spawn.

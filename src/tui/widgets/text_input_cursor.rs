@@ -20,8 +20,34 @@ impl TextInputCursor {
         self.move_cursor_right()
     }
     
-    pub fn delete_char(&self) {
-        todo!("Implement delete char for TextInputCursor");
+    pub fn delete_char_left(&mut self) {
+        if self.cursor_position == 0 {
+            return
+        }
+
+        let current_index = self.cursor_position;
+        let before_current_index = current_index.saturating_sub(1);
+
+        let before_char_to_delete = self.input_text.chars().take(before_current_index);
+        let after_char_to_delete = self.input_text.chars().skip(current_index);
+
+        self.input_text = before_char_to_delete.chain(after_char_to_delete).collect();
+        self.move_cursor_left()
+    }
+
+    pub fn delete_char_right(&mut self) {
+        if self.cursor_position == self.input_text.chars().count() {
+            return
+        }
+
+        let current_index = self.cursor_position;
+        let after_current_index = current_index.saturating_add(1);
+
+        let before_char_to_delete = self.input_text.chars().take(current_index);
+        let after_char_to_delete = self.input_text.chars().skip(after_current_index);
+
+        self.input_text = before_char_to_delete.chain(after_char_to_delete).collect();
+        self.move_cursor_right()
     }
 
     pub fn move_cursor_left(&mut self) {
