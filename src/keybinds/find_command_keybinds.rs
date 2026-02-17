@@ -1,7 +1,6 @@
 use std::rc::Rc;
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
-use crate::tui::state::{Mode, State, ViewType};
-use crate::tui::widgets::text_input_cursor::TextInputCursor;
+use crate::tui::state::{Mode, State};
 
 pub fn try_keypress(state: &mut State, event: KeyEvent) {
     if KeyModifiers::CONTROL == event.modifiers {
@@ -72,10 +71,49 @@ fn try_ctrl_mod_keypress(state: &mut State, event: KeyEvent) {
     }
 }
 
-pub fn try_key_release(state: &mut State, event: KeyEvent) {
-    log::warn!("Unhandled release keypress in Find mode: {:?}", event);
+pub fn try_key_release(_: &mut State, _: KeyEvent) {
 }
 
 pub fn try_key_repeat(state: &mut State, event: KeyEvent) {
-    log::warn!("Unhandled repeat keypress in Find mode: {:?}", state);
+    try_keypress(state, event);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::tui::widgets::text_input_cursor::TextInputCursor;
+    use crate::tui::state::{ModeState, ViewType};
+    use ratatui::crossterm::event::{KeyEventKind, KeyEventState};
+    use std::cell::RefCell;
+    use std::rc::Rc;
+    use std::sync::mpsc;
+
+    fn setup_find_state() -> State {
+        let (sender, _) = mpsc::channel();
+        let mut state = State::new(sender);
+        state.current_mode = Rc::new(RefCell::new(ModeState::new(Mode::Find(
+            TextInputCursor::new_empty(),
+            ViewType::Command,
+        ))));
+        state
+    }
+
+    #[test]
+    fn try_key_repeat_enters_char_in_find_mode() {
+        let mut state = setup_find_state();
+        let repeat_char_event = KeyEvent {
+            code: KeyCode::Char('a'),
+            modifiers: KeyModifiers::NONE,
+            kind: KeyEventKind::Repeat,
+            state: KeyEventState::NONE,
+        };
+
+        try_key_repeat(&mut state, repeat_char_event);
+
+        if let Mode::Find(input, _) = &state.current_mode.borrow().mode {
+            assert_eq!(input.input_text, "a");
+        } else {
+            panic!("state should be in find mode");
+        }
+    }
 }
