@@ -95,7 +95,7 @@ fn handle_task_events(
 fn handle_tui_events(tui_event: TuiEvent, state: &mut State) -> Result<(), String> {
     match tui_event {
         TuiEvent::Key(event) => {
-            debug!("Key event: {:?}", event);
+            log::trace!("Key event: {:?}", event);
             keybinds::try_keybinds(state, event);
         }
         TuiEvent::FocusGained => {
