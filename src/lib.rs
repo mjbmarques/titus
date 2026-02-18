@@ -10,7 +10,7 @@ use crate::tui::tui_event::TuiEvent;
 use crate::tui::tui_event::TuiEventHandler;
 use crate::tui::widgets::list::SelectableList;
 use crate::tui::{Tui, file_io, task_adapter};
-use log::{debug, error, info};
+use log::{debug, error, info, trace};
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
 use ratatui::crossterm::event::KeyEvent;
@@ -95,7 +95,7 @@ fn handle_task_events(
 fn handle_tui_events(tui_event: TuiEvent, state: &mut State) -> Result<(), String> {
     match tui_event {
         TuiEvent::Key(event) => {
-            log::trace!("Key event: {:?}", event);
+            trace!("Key event: {:?}", event);
             keybinds::try_keybinds(state, event);
         }
         TuiEvent::FocusGained => {
