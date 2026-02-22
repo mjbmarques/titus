@@ -1,7 +1,8 @@
-use std::rc::Rc;
-use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+use crate::tui::event::EventRequest;
 use crate::tui::state::{Mode, State, ViewType};
 use crate::tui::widgets::text_input_cursor::TextInputCursor;
+use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+use std::rc::Rc;
 
 pub fn try_keypress(state: &mut State, event: KeyEvent) {
     if KeyModifiers::CONTROL == event.modifiers {
@@ -52,11 +53,18 @@ fn move_cursor_right(state: &mut State) {
 }
 
 fn submit_find(state: &mut State) {
-    todo!("not implemented")
+    if let Mode::Find(input, _) = &mut state.current_mode.borrow_mut().mode {
+        state.task_scheduler.trigger_task(EventRequest::FindInFile(
+            input.input_text.clone(),
+            1000,
+            1000,
+        ));
+    }
 }
 
 fn back_to_view(state: &mut State) {
-    let view_mode = state.all_modes
+    let view_mode = state
+        .all_modes
         .iter()
         .find(|mode| mode.borrow().mode == Mode::Viewer());
     match view_mode {
@@ -73,9 +81,9 @@ fn try_ctrl_mod_keypress(state: &mut State, event: KeyEvent) {
 }
 
 pub fn try_key_release(state: &mut State, event: KeyEvent) {
-    log::warn!("Unhandled release keypress in Find mode: {:?}", event);
+    // log::warn!("Unhandled release keypress in Find mode: {:?}", event);
 }
 
 pub fn try_key_repeat(state: &mut State, event: KeyEvent) {
-    log::warn!("Unhandled repeat keypress in Find mode: {:?}", state);
+    // log::warn!("Unhandled repeat keypress in Find mode: {:?}", state);
 }

@@ -141,31 +141,30 @@ fn render_command_input(state: &mut State, frame: &mut Frame, own_chunk: Rect) {
     let input_text: String;
     let char_idx: usize;
     match input_type {
-            Mode::Find(input, view_type) => {
-                input_title = String::from("Search");
-                input_text = input.input_text;
-                char_idx = input.cursor_position;
-            },
-            Mode::GoToLine(input, view_type) => {
-                input_title = String::from("Go to line");
-                input_text = input.input_text;
-                char_idx = input.cursor_position;
-            },
-            Mode::FileImport(input, view_type) => {
-                input_title = String::from("Open file");
-                input_text = input.input_text;
-                char_idx = input.cursor_position;
-            },
-            _ => panic!("invalid viewer state for command input"),
+        Mode::Find(input, view_type) => {
+            input_title = String::from("Search");
+            input_text = input.input_text;
+            char_idx = input.cursor_position;
+        }
+        Mode::GoToLine(input, view_type) => {
+            input_title = String::from("Go to line");
+            input_text = input.input_text;
+            char_idx = input.cursor_position;
+        }
+        Mode::FileImport(input, view_type) => {
+            input_title = String::from("Open file");
+            input_text = input.input_text;
+            char_idx = input.cursor_position;
+        }
+        _ => panic!("invalid viewer state for command input"),
     };
 
-    let input_widget = Paragraph::new(input_text)
-        .block(Block::bordered().title(input_title));
+    let input_widget = Paragraph::new(input_text).block(Block::bordered().title(input_title));
     frame.render_widget(input_widget, own_chunk);
-    frame.set_cursor_position(
-        Position::new(own_chunk.x + (char_idx as u16).saturating_add(1),
-                      own_chunk.y.saturating_add(1))
-    );
+    frame.set_cursor_position(Position::new(
+        own_chunk.x + (char_idx as u16).saturating_add(1),
+        own_chunk.y.saturating_add(1),
+    ));
 }
 
 fn update_mode_dimensions(state: &mut State, chunk: Rect) {
@@ -175,7 +174,8 @@ fn update_mode_dimensions(state: &mut State, chunk: Rect) {
     };
     debug!(
         "Updated mode {:?} with dimensions: {:?}",
-        state.current_mode.borrow().mode, state.current_mode.borrow().dimensions
+        state.current_mode.borrow().mode,
+        state.current_mode.borrow().dimensions
     );
 }
 

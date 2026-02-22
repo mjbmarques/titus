@@ -1,6 +1,51 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::process::Command;
 use log::{debug, error, info};
+
+pub fn find_in_file_with_rg(
+    file_location: String,
+    query: String,
+    lines_before: usize,
+    lines_after: usize,
+) -> Result<Vec<(String, bool)>, String> {
+    let output = Command::new("rg")
+        .arg("--line-number")
+        .arg("--no-heading")
+        .arg("--color")
+        .arg("never")
+        // .arg(format!("-C {}", lines_before))
+        // .arg(format!("-B {}", lines_before))
+        // .arg(format!("-A {}", lines_after))
+        // .arg("--")
+        .arg(query.clone())
+        .arg(file_location.clone())
+        .output()
+        .map_err(|e| {
+            format!("Failed to spawn rg for '{file_location}' with query '{query}': {e}")
+        })?;
+
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    if !stderr.is_empty() {
+        error!("rg error for '{file_location}' with query '{query}': {stderr}");
+        return Err(format!("rg error: {stderr}"));
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let mut matches: Vec<(String, bool)> = Vec::new();
+    for row in stdout.lines() {
+        if let Some((line_no, line)) = row.split_once(':') {
+            if let Ok(line_number) = line_no.parse::<usize>() {
+                matches.push((line.to_string(), true));
+            }
+        } else if let Some((line_no, line)) = row.split_once('-') {
+            if let Ok(line_number) = line_no.parse::<usize>() {
+                matches.push((line.to_string(), false));
+            }
+        }
+    }
+    Ok(matches)
+}
 
 pub fn find_by_line_number(file_location: String,
                                 line_number: usize,

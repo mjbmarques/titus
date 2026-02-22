@@ -1,11 +1,11 @@
-use std::cell::RefCell;
-use std::rc::Rc;
 use crate::tui::event::{EventResponse, TaskScheduler};
 use crate::tui::tui_event::TuiEvent;
 use crate::tui::widgets::list::SelectableList;
-use ratatui::widgets::ScrollbarState;
-use std::sync::mpsc::Sender;
 use crate::tui::widgets::text_input_cursor::TextInputCursor;
+use ratatui::widgets::ScrollbarState;
+use std::cell::RefCell;
+use std::rc::Rc;
+use std::sync::mpsc::Sender;
 
 #[derive(Debug)]
 pub struct State {
@@ -65,11 +65,9 @@ pub enum ViewType {
 impl Mode {
     pub fn is_viewer_command_mode(&self) -> bool {
         match self {
-            Mode::Find(_, view_type) |
-            Mode::GoToLine(_, view_type) |
-            Mode::FileImport(_, view_type) => {
-                *view_type == ViewType::Command
-            }
+            Mode::Find(_, view_type)
+            | Mode::GoToLine(_, view_type)
+            | Mode::FileImport(_, view_type) => *view_type == ViewType::Command,
             _ => false,
         }
     }
@@ -110,7 +108,13 @@ impl State {
 
 impl ModeState {
     pub fn new(mode: Mode) -> Self {
-        Self { mode, dimensions: Dimensions { width: 0, height: 0 } }
+        Self {
+            mode,
+            dimensions: Dimensions {
+                width: 0,
+                height: 0,
+            },
+        }
     }
 
     pub fn new_with_dimensions(mode: Mode, dimensions: Dimensions) -> Self {

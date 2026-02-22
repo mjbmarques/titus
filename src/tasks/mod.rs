@@ -1,4 +1,4 @@
-use crate::tui::event::{EventRequest};
+use crate::tui::event::EventRequest;
 use crate::tui::state::AggregateEvent;
 use std::sync::mpsc::Sender;
 

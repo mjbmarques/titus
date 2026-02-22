@@ -1,10 +1,10 @@
 use crate::tui::state::AggregateEvent;
 use ratatui::crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
+use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::{Sender};
-use std::sync::{Arc};
+use std::sync::mpsc::Sender;
+use std::thread;
 use std::time::{Duration, Instant};
-use std::{thread};
 
 #[derive(Debug)]
 pub enum TuiEvent {

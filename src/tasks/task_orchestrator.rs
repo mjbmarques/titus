@@ -13,5 +13,12 @@ pub fn orchestrate_task(task: EventRequest, sender: Sender<AggregateEvent>) {
                 )))
                 .expect("Failed to send FileContent");
         }
+        EventRequest::FindInFile(content, lines_before, lines_after) => {
+            // let
+            // sender.send(AggregateEvent::Task(EventResponse::FileSearchContent(
+            //
+            // )))
+            //     .expect("Failed to send FileSearchContent");
+        }
     }
 }

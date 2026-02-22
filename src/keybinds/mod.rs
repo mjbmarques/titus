@@ -1,8 +1,8 @@
 use crate::tui::state::{Mode, State};
 use ratatui::crossterm::event::{KeyEvent, KeyEventKind};
 
-mod viewer_keybinds;
 mod find_command_keybinds;
+mod viewer_keybinds;
 
 // Try keybinds and map them depending on the mode.
 // For now there is only one mode so no mapping is done, temporarily.

@@ -1,3 +1,4 @@
+use crate::file;
 use crate::tui::file_io;
 
 pub fn open_file(file_location: String) -> Vec<String> {
@@ -8,4 +9,11 @@ pub fn open_file(file_location: String) -> Vec<String> {
         }
     };
     lines_vec
+}
+
+pub fn find_in_file(file_location: String, query: String) -> Vec<(String, bool)> {
+    if let Ok(result) = file::find::find_in_file_with_rg(file_location, query, 1000, 1000) {
+        return result;
+    }
+    vec![]
 }

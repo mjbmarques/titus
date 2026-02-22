@@ -1,17 +1,22 @@
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TextInputCursor {
     pub input_text: String,
-    pub cursor_position: usize
+    pub cursor_position: usize,
 }
 
 impl TextInputCursor {
     pub fn new(input_text: String, cursor_position: usize) -> TextInputCursor {
-        TextInputCursor { input_text, cursor_position }
+        TextInputCursor {
+            input_text,
+            cursor_position,
+        }
     }
 
     pub fn new_empty() -> TextInputCursor {
-        TextInputCursor { input_text: String::new(), cursor_position: 0 }
+        TextInputCursor {
+            input_text: String::new(),
+            cursor_position: 0,
+        }
     }
 
     pub fn enter_char(&mut self, new_char: char) {
@@ -19,10 +24,10 @@ impl TextInputCursor {
         self.input_text.insert(index, new_char);
         self.move_cursor_right()
     }
-    
+
     pub fn delete_char_left(&mut self) {
         if self.cursor_position == 0 {
-            return
+            return;
         }
 
         let current_index = self.cursor_position;
@@ -37,7 +42,7 @@ impl TextInputCursor {
 
     pub fn delete_char_right(&mut self) {
         if self.cursor_position == self.input_text.chars().count() {
-            return
+            return;
         }
 
         let current_index = self.cursor_position;

@@ -1,7 +1,7 @@
+mod file;
 mod keybinds;
 mod tasks;
 mod tui;
-mod file;
 
 use crate::tui::event::{EventRequest, EventResponse};
 use crate::tui::state::{AggregateEvent, FileBatch, LogFileState};
@@ -87,6 +87,9 @@ fn handle_task_events(
         }
         EventResponse::Error(err) => {
             debug!("EventResponse::Error received: {:?}", err);
+        }
+        EventResponse::FileSearchContent(_, _) => {
+            debug!("EventResponse::FileSearchContent received");
         }
     };
     Ok(())

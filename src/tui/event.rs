@@ -6,6 +6,7 @@ use std::thread;
 #[derive(Debug)]
 pub enum EventResponse {
     FileContent(String, Vec<String>),
+    FileSearchContent(Vec<String>, usize),
     Error(EventError),
 }
 
@@ -18,6 +19,7 @@ pub enum EventError {
 #[derive(Debug)]
 pub enum EventRequest {
     LoadFile(String),
+    FindInFile(String, usize, usize),
 }
 
 #[derive(Debug)]
