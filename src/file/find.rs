@@ -1,7 +1,7 @@
+use log::{debug, error, info};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::process::Command;
-use log::{debug, error, info};
 
 pub fn find_in_file_with_rg(
     file_location: String,
@@ -47,10 +47,12 @@ pub fn find_in_file_with_rg(
     Ok(matches)
 }
 
-pub fn find_by_line_number(file_location: String,
-                                line_number: usize,
-                                lines_before: usize,
-                                lines_after: usize) -> Vec<(usize, String)> {
+pub fn find_by_line_number(
+    file_location: String,
+    line_number: usize,
+    lines_before: usize,
+    lines_after: usize,
+) -> Vec<(usize, String)> {
     // line number should be 1-based. Only 0-based when interacting with file.
     if line_number == 0 {
         error!("line number cannot be 0");
@@ -62,7 +64,7 @@ pub fn find_by_line_number(file_location: String,
         Err(_) => {
             error!("failed to open file {}", &file_location);
             return Vec::new();
-        },
+        }
     };
 
     // Turning the 1-based line number into 0-based values.
@@ -72,10 +74,14 @@ pub fn find_by_line_number(file_location: String,
     let file_lines = BufReader::new(&file).lines();
     let first_line_number = fixed_line_number.saturating_sub(lines_before);
 
-    for line in file_lines.enumerate().skip(first_line_number.saturating_sub(1)) {
+    for line in file_lines
+        .enumerate()
+        .skip(first_line_number.saturating_sub(1))
+    {
         if let Ok(text) = line.1 {
-            if line.0 >= fixed_line_number.saturating_sub(lines_before) &&
-                line.0 <= fixed_line_number.saturating_add(lines_after) {
+            if line.0 >= fixed_line_number.saturating_sub(lines_before)
+                && line.0 <= fixed_line_number.saturating_add(lines_after)
+            {
                 result_lines.push((line.0.saturating_add(1), text.clone()))
             }
             if line.0 > fixed_line_number.saturating_add(lines_after) {
@@ -88,14 +94,19 @@ pub fn find_by_line_number(file_location: String,
 
 // #[cfg(test)]
 mod tests {
-    use std::time::{Instant};
     use super::*;
+    use std::time::Instant;
 
     // #[test]
     // Taking 2.8µs to execute.
     fn test_find_by_line_number_zero() {
         let start = Instant::now();
-        let result = find_by_line_number("./test-logs/numbers-hundred-milion.log".to_string(), 0, 0, 3);
+        let result = find_by_line_number(
+            "./test-logs/numbers-hundred-milion.log".to_string(),
+            0,
+            0,
+            3,
+        );
         let end = Instant::now();
         println!("execution took: {:?}", end.duration_since(start));
         assert_eq!(result.len(), 0);
@@ -105,59 +116,149 @@ mod tests {
     // Taking 100.2µs to execute.
     fn test_find_by_line_number_init_multiple() {
         let start = Instant::now();
-        let result = find_by_line_number("./test-logs/numbers-hundred-milion.log".to_string(), 1, 0, 3);
+        let result = find_by_line_number(
+            "./test-logs/numbers-hundred-milion.log".to_string(),
+            1,
+            0,
+            3,
+        );
         let end = Instant::now();
         println!("execution took: {:?}", end.duration_since(start));
         assert_eq!(result.len(), 4);
-        assert_eq!(result[0], (1, "minus-fifty-milion: menos cinquenta milhoes - -50000000".to_string()));
-        assert_eq!(result[1], (2, "minus-forty-nine-milion-nine-hundred-ninety-nine\
+        assert_eq!(
+            result[0],
+            (
+                1,
+                "minus-fifty-milion: menos cinquenta milhoes - -50000000".to_string()
+            )
+        );
+        assert_eq!(
+            result[1],
+            (
+                2,
+                "minus-forty-nine-milion-nine-hundred-ninety-nine\
         -thousand-nine-hundred-ninety-nine: menos quarenta e nove milhoes e novecentos \
-        e noventa e nove mil e novecentos e noventa e nove - -49999999".to_string()));
-        assert_eq!(result[2], (3, "minus-forty-nine-milion-nine-hundred-ninety-nine\
+        e noventa e nove mil e novecentos e noventa e nove - -49999999"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[2],
+            (
+                3,
+                "minus-forty-nine-milion-nine-hundred-ninety-nine\
         -thousand-nine-hundred-ninety-eight: menos quarenta e nove milhoes e novecentos \
-        e noventa e nove mil e novecentos e noventa e oito - -49999998".to_string()));
-        assert_eq!(result[3], (4, "minus-forty-nine-milion-nine-hundred-ninety-nine\
+        e noventa e nove mil e novecentos e noventa e oito - -49999998"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[3],
+            (
+                4,
+                "minus-forty-nine-milion-nine-hundred-ninety-nine\
         -thousand-nine-hundred-ninety-seven: menos quarenta e nove milhoes e novecentos \
-        e noventa e nove mil e novecentos e noventa e sete - -49999997".to_string()));
+        e noventa e nove mil e novecentos e noventa e sete - -49999997"
+                    .to_string()
+            )
+        );
     }
 
     // #[test]
     // Taking 25.708569s to execute.
     fn test_find_by_line_number_middle_multiple() {
-        let start  = Instant::now();
+        let start = Instant::now();
         let result = find_by_line_number(
-            "./test-logs/numbers-hundred-milion.log".to_string(), 46387545, 3, 3);
+            "./test-logs/numbers-hundred-milion.log".to_string(),
+            46387545,
+            3,
+            3,
+        );
         let end = Instant::now();
         println!("execution took: {:?}", end.duration_since(start));
         assert_eq!(result.len(), 7);
-        assert_eq!(result[0], (46387542, "minus-three-milion-six-hundred-twelve-thousand-four-\
+        assert_eq!(
+            result[0],
+            (
+                46387542,
+                "minus-three-milion-six-hundred-twelve-thousand-four-\
         hundred-fifty-nine: menos tres milhoes e seiscentos e doze mil e quatrocentos e cinquenta \
-        e nove - -3612459".to_string()));
-        assert_eq!(result[1], (46387543, "minus-three-milion-six-hundred-twelve-thousand-four-\
+        e nove - -3612459"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[1],
+            (
+                46387543,
+                "minus-three-milion-six-hundred-twelve-thousand-four-\
         hundred-fifty-eight: menos tres milhoes e seiscentos e doze mil e quatrocentos e cinquenta \
-        e oito - -3612458".to_string()));
-        assert_eq!(result[2], (46387544, "minus-three-milion-six-hundred-twelve-thousand-four-\
+        e oito - -3612458"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[2],
+            (
+                46387544,
+                "minus-three-milion-six-hundred-twelve-thousand-four-\
         hundred-fifty-seven-prime: menos tres milhoes e seiscentos e doze mil e quatrocentos \
-        e cinquenta e sete numero primo - -3612457".to_string()));
-        assert_eq!(result[3], (46387545, "minus-three-milion-six-hundred-twelve-thousand-four-\
+        e cinquenta e sete numero primo - -3612457"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[3],
+            (
+                46387545,
+                "minus-three-milion-six-hundred-twelve-thousand-four-\
         hundred-fifty-six: menos tres milhoes e seiscentos e doze mil e quatrocentos e cinquenta \
-        e seis - -3612456".to_string()));
-        assert_eq!(result[4], (46387546, "minus-three-milion-six-hundred-twelve-thousand-four-\
+        e seis - -3612456"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[4],
+            (
+                46387546,
+                "minus-three-milion-six-hundred-twelve-thousand-four-\
         hundred-fifty-five: menos tres milhoes e seiscentos e doze mil e quatrocentos e cinquenta \
-        e cinco - -3612455".to_string()));
-        assert_eq!(result[5], (46387547, "minus-three-milion-six-hundred-twelve-thousand-four-\
+        e cinco - -3612455"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[5],
+            (
+                46387547,
+                "minus-three-milion-six-hundred-twelve-thousand-four-\
         hundred-fifty-four: menos tres milhoes e seiscentos e doze mil e quatrocentos e cinquenta \
-        e quatro - -3612454".to_string()));
-        assert_eq!(result[6], (46387548, "minus-three-milion-six-hundred-twelve-thousand-four-\
+        e quatro - -3612454"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            result[6],
+            (
+                46387548,
+                "minus-three-milion-six-hundred-twelve-thousand-four-\
         hundred-fifty-three: menos tres milhoes e seiscentos e doze mil e quatrocentos e cinquenta \
-        e tres - -3612453".to_string()));
+        e tres - -3612453"
+                    .to_string()
+            )
+        );
     }
 
     // #[test]
     // Taking 52.6357405s to execute.
     fn test_find_by_line_number_end_multiple() {
-        let start  = Instant::now();
-        let result = find_by_line_number("./test-logs/numbers-hundred-milion.log".to_string(), 98522240, 100, 100);
+        let start = Instant::now();
+        let result = find_by_line_number(
+            "./test-logs/numbers-hundred-milion.log".to_string(),
+            98522240,
+            100,
+            100,
+        );
         let end = Instant::now();
         println!("execution took: {:?}", end.duration_since(start));
         assert_eq!(result.len(), 201);
